@@ -39,9 +39,6 @@ jobs:
 
       - name: Upload to S3
         run: |
-          echo ${S3_BUCKET}
-          echo ${REPO_NAME}
-          echo ${ZIP_FILE}
           DEST="s3://${S3_BUCKET}/${REPO_NAME}/${ZIP_FILE}"
           aws s3 cp "$ZIP_FILE" "$DEST" --sse AES256 --only-show-errors
           echo "Uploaded to $DEST"
