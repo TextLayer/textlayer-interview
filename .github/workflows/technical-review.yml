@@ -71,6 +71,7 @@ jobs:
                --data '{
                  "sendNotifications": true,
                  "candidateId": "e26238a9-c368-420a-9c55-753f3ea808bd",
-                 "note": "@Colton Rhyason, Technical review completed. You can find the feedback here: https://github.com/textlayer/textlayer-interview/pull/${{ github.event.number }}"
+                 "note": "@Colton Rhyason, Technical review completed. You can find the feedback here: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}"
                }'
 
+# TODO: some-submission-name-candidateId.zip -> candidate_id = file_name.split("-")[-1] -> candidate_id: str, contents: bytes
