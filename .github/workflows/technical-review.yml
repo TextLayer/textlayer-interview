@@ -15,8 +15,8 @@ jobs:
       PR_NUMBER: ${{ github.event.number }}
       ASHBY_API_KEY: ${{ secrets.ASHBY_API_KEY }}
       SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-      TO_EMAIL: thabang@textlayer.ai
-      FROM_EMAIL: services@textlayer.ai
+      TO_EMAIL: ${{ vars.TO_EMAIL }}
+      FROM_EMAIL: ${{ vars.FROM_EMAIL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -73,13 +73,13 @@ jobs:
         run: |
           curl --request POST \
                --url https://api.ashbyhq.com/candidate.createNote \
-               -u $ASHBY_API_KEY: \
+               -u ${{ env.ASHBY_API_KEY }}: \
                --header 'accept: application/json; version=1' \
                --header 'content-type: application/json' \
                --data '{
                  "sendNotifications": true,
-                 "candidateId": "'$CANDIDATE_ID'",
-                 "note": "Technical review completed. You can find the feedback here: https://github.com/'$REPOSITORY'/pull/'$PR_NUMBER'"
+                 "candidateId": "${{ env.CANDIDATE_ID }}",
+                 "note": "Technical review completed. You can find the feedback here: https://github.com/${{ env.REPOSITORY }}/pull/${{ env.PR_NUMBER }}"
                }'
 
       - name: Get candidate info from Ashby
@@ -87,13 +87,13 @@ jobs:
         run: |
           response=$(curl --request POST \
                           --url https://api.ashbyhq.com/candidate.info \
-                          -u $ASHBY_API_KEY: \
+                          -u ${{ env.ASHBY_API_KEY }}: \
                           --header 'accept: application/json; version=1' \
                           --header 'content-type: application/json' \
                           --data '{
-                            "id": "'$CANDIDATE_ID'"
+                            "id": "${{ env.CANDIDATE_ID }}"
                           }')
-          
+
           application_id=$(echo "$response" | jq -r '.results.applicationIds[0]')
           echo "application_id=$application_id" >> $GITHUB_OUTPUT
 
@@ -101,26 +101,26 @@ jobs:
         run: |
           curl --request POST \
                --url https://api.sendgrid.com/v3/mail/send \
-               --header 'Authorization: Bearer '$SENDGRID_API_KEY'' \
+               --header 'Authorization: Bearer ${{ env.SENDGRID_API_KEY }}' \
                --header 'Content-Type: application/json' \
                --data '{
                  "personalizations": [
                    {
                      "to": [
                        {
-                         "email": "'$TO_EMAIL'"
+                         "email": "${{ env.TO_EMAIL }}"
                        }
                      ],
                      "subject": "Application note has been added"
                    }
                  ],
                  "from": {
-                   "email": "'$FROM_EMAIL'"
+                   "email": "${{ env.FROM_EMAIL }}"
                  },
                  "content": [
                    {
                      "type": "text/plain",
-                     "value": "Application note has been added: https://app.ashbyhq.com/candidates/pipeline/active/right-side/candidates/'$CANDIDATE_ID'/applications/${{ steps.candidate-info.outputs.application_id }}/feed"
+                     "value": "Application note has been added: https://app.ashbyhq.com/candidates/pipeline/active/right-side/candidates/${{ env.CANDIDATE_ID }}/applications/${{ steps.candidate-info.outputs.application_id }}/feed"
                    }
                  ]
                }'
