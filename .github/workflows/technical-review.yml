@@ -106,7 +106,7 @@ jobs:
                    {
                      "to": [
                        {
-                         "email": "colton@textlayer.ai"
+                         "email": "thabang@textlayer.ai"
                        }
                      ],
                      "subject": "Application note has been added"
