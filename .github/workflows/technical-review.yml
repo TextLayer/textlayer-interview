@@ -61,5 +61,16 @@ jobs:
             Read
             WebSearch
 
-# TODO: Print output in Pull Request (confirm working)
-# TODO: Create note in Ashby and tag @Colton Rhyason
+      - name: Create Ashby note
+        run: |
+          curl --request POST \
+               --url https://api.ashbyhq.com/candidate.createNote \
+               --header 'accept: application/json' \
+               --header 'content-type: application/json' \
+               --header 'authorization: Bearer ${{ secrets.ASHBY_API_KEY }}' \
+               --data '{
+                 "sendNotifications": true,
+                 "candidateId": "e26238a9-c368-420a-9c55-753f3ea808bd",
+                 "note": "@Colton Rhyason, Technical review completed. You can find the feedback here: https://github.com/textlayer/textlayer-interview/pull/${{ github.event.number }}"
+               }'
+
