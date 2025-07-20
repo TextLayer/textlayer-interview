@@ -1,0 +1,122 @@
+[
+  {
+    "user_query": "What is the total number of customers?",
+    "sql_query": "SELECT COUNT(*) FROM customer;",
+    "natural_language_answer": "There are X customers in total.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name customer does not exist!\nDid you mean \"pg_constraint or sqlite_master\"?\n\nLINE 1: SELECT COUNT(*) FROM customer;\n                             ^"
+  },
+  {
+    "user_query": "List all product names.",
+    "sql_query": "SELECT name FROM product;",
+    "natural_language_answer": "The product names are: X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name product does not exist!\nDid you mean \"duckdb_types\"?\n\nLINE 1: SELECT name FROM product;\n                         ^"
+  },
+  {
+    "user_query": "What is the average price of products?",
+    "sql_query": "SELECT AVG(price) FROM product;",
+    "natural_language_answer": "The average price of products is X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name product does not exist!\nDid you mean \"duckdb_types\"?\n\nLINE 1: SELECT AVG(price) FROM product;\n                               ^"
+  },
+  {
+    "user_query": "Find the highest order total.",
+    "sql_query": "SELECT MAX(total) FROM orders;",
+    "natural_language_answer": "The highest order total is X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name orders does not exist!\nDid you mean \"pg_indexes\"?\n\nLINE 1: SELECT MAX(total) FROM orders;\n                               ^"
+  },
+  {
+    "user_query": "How many orders were placed in 2023?",
+    "sql_query": "SELECT COUNT(*) FROM orders WHERE YEAR(order_date) = 2023;",
+    "natural_language_answer": "There were X orders placed in 2023.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name orders does not exist!\nDid you mean \"pg_indexes\"?\n\nLINE 1: SELECT COUNT(*) FROM orders WHERE YEAR(order_date) = 2023;\n                             ^"
+  },
+  {
+    "user_query": "What is the name of the customer with the highest order total?",
+    "sql_query": "SELECT customer.name FROM customer JOIN orders ON customer.id = orders.customer_id ORDER BY orders.total DESC LIMIT 1;",
+    "natural_language_answer": "The customer with the highest order total is X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name customer does not exist!\nDid you mean \"pg_constraint or sqlite_master\"?\n\nLINE 1: SELECT customer.name FROM customer JOIN orders ON customer.id = orders.customer_id...\n                                  ^"
+  },
+  {
+    "user_query": "List all distinct product categories.",
+    "sql_query": "SELECT DISTINCT category FROM product;",
+    "natural_language_answer": "The distinct product categories are: X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name product does not exist!\nDid you mean \"duckdb_types\"?\n\nLINE 1: SELECT DISTINCT category FROM product;\n                                      ^"
+  },
+  {
+    "user_query": "What is the total revenue from all orders?",
+    "sql_query": "SELECT SUM(total) FROM orders;",
+    "natural_language_answer": "The total revenue from all orders is X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name orders does not exist!\nDid you mean \"pg_indexes\"?\n\nLINE 1: SELECT SUM(total) FROM orders;\n                               ^"
+  },
+  {
+    "user_query": "How many products are in stock?",
+    "sql_query": "SELECT COUNT(*) FROM product WHERE stock > 0;",
+    "natural_language_answer": "There are X products in stock.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name product does not exist!\nDid you mean \"duckdb_types\"?\n\nLINE 1: SELECT COUNT(*) FROM product WHERE stock > 0;\n                             ^"
+  },
+  {
+    "user_query": "Find the lowest priced product.",
+    "sql_query": "SELECT name FROM product ORDER BY price ASC LIMIT 1;",
+    "natural_language_answer": "The lowest priced product is X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name product does not exist!\nDid you mean \"duckdb_types\"?\n\nLINE 1: SELECT name FROM product ORDER BY price ASC LIMIT 1;\n                         ^"
+  },
+  {
+    "user_query": "What is the total number of orders for each customer?",
+    "sql_query": "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id;",
+    "natural_language_answer": "The total number of orders for each customer is: X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name orders does not exist!\nDid you mean \"pg_indexes\"?\n\nLINE 1: SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id;\n                                          ^"
+  },
+  {
+    "user_query": "List all customers who have placed more than 5 orders.",
+    "sql_query": "SELECT customer_id FROM orders GROUP BY customer_id HAVING COUNT(*) > 5;",
+    "natural_language_answer": "The customers who have placed more than 5 orders are: X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name orders does not exist!\nDid you mean \"pg_indexes\"?\n\nLINE 1: SELECT customer_id FROM orders GROUP BY customer_id HAVING COUNT(*) > 5;\n                                ^"
+  },
+  {
+    "user_query": "What is the average number of products per order?",
+    "sql_query": "SELECT AVG(product_count) FROM (SELECT COUNT(*) AS product_count FROM order_details GROUP BY order_id);",
+    "natural_language_answer": "The average number of products per order is X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name order_details does not exist!\nDid you mean \"pragma_database_list\"?\n\nLINE 1: ...(product_count) FROM (SELECT COUNT(*) AS product_count FROM order_details GROUP BY order_id);\n                                                                       ^"
+  },
+  {
+    "user_query": "Find the most expensive product in each category.",
+    "sql_query": "SELECT category, MAX(price) FROM product GROUP BY category;",
+    "natural_language_answer": "The most expensive product in each category is: X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name product does not exist!\nDid you mean \"duckdb_types\"?\n\nLINE 1: SELECT category, MAX(price) FROM product GROUP BY category;\n                                         ^"
+  },
+  {
+    "user_query": "How many products have a price greater than $100?",
+    "sql_query": "SELECT COUNT(*) FROM product WHERE price > 100;",
+    "natural_language_answer": "There are X products with a price greater than $100.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name product does not exist!\nDid you mean \"duckdb_types\"?\n\nLINE 1: SELECT COUNT(*) FROM product WHERE price > 100;\n                             ^"
+  },
+  {
+    "user_query": "List the names of customers who have not placed any orders.",
+    "sql_query": "SELECT name FROM customer WHERE id NOT IN (SELECT customer_id FROM orders);",
+    "natural_language_answer": "The customers who have not placed any orders are: X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name customer does not exist!\nDid you mean \"pg_constraint or sqlite_master\"?\n\nLINE 1: SELECT name FROM customer WHERE id NOT IN (SELECT customer_id FROM orders);\n                         ^"
+  },
+  {
+    "user_query": "What is the total stock value of all products?",
+    "sql_query": "SELECT SUM(price * stock) FROM product;",
+    "natural_language_answer": "The total stock value of all products is X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name product does not exist!\nDid you mean \"duckdb_types\"?\n\nLINE 1: SELECT SUM(price * stock) FROM product;\n                                       ^"
+  },
+  {
+    "user_query": "Find the average order total for each customer.",
+    "sql_query": "SELECT customer_id, AVG(total) FROM orders GROUP BY customer_id;",
+    "natural_language_answer": "The average order total for each customer is: X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name orders does not exist!\nDid you mean \"pg_indexes\"?\n\nLINE 1: SELECT customer_id, AVG(total) FROM orders GROUP BY customer_id;\n                                            ^"
+  },
+  {
+    "user_query": "List all products that are out of stock.",
+    "sql_query": "SELECT name FROM product WHERE stock = 0;",
+    "natural_language_answer": "The products that are out of stock are: X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name product does not exist!\nDid you mean \"duckdb_types\"?\n\nLINE 1: SELECT name FROM product WHERE stock = 0;\n                         ^"
+  },
+  {
+    "user_query": "What is the total number of products sold?",
+    "sql_query": "SELECT SUM(quantity) FROM order_details;",
+    "natural_language_answer": "The total number of products sold is X.",
+    "actual_result": "Error executing SQL: Catalog Error: Table with name order_details does not exist!\nDid you mean \"pragma_database_list\"?\n\nLINE 1: SELECT SUM(quantity) FROM order_details;\n                                  ^"
+  }
+]

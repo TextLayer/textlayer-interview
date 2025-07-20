@@ -1,0 +1,108 @@
+{
+  "table_name": "product",
+  "columns": [
+    {
+      "name": "Key",
+      "sample_values": [
+        "P0000",
+        "P1000",
+        "P10001",
+        "P10002",
+        "P10003"
+      ],
+      "description": "Key contains various text labels or string categories.  Example values: P0000, P1000, P10001."
+    },
+    {
+      "name": "ParentId",
+      "sample_values": [
+        "",
+        "P0000",
+        "P1000",
+        "P10001",
+        "P8000"
+      ],
+      "description": "ParentId appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: P10001, , P0000."
+    },
+    {
+      "name": "Name",
+      "sample_values": [
+        "Total Products",
+        "Product Line A",
+        "Category 1",
+        "Category 2",
+        "Category 3"
+      ],
+      "description": "Name seems to store names or named entities.  Example values: Total Products, Product Line A, Category 1."
+    },
+    {
+      "name": "Product Line",
+      "sample_values": [
+        "",
+        "Product Line A"
+      ],
+      "description": "Product Line is likely a categorical field with values such as: , Product Line A.  Example values: Product Line A, ."
+    }
+  ],
+  "sample_rows": [
+    {
+      "Key": "P0000",
+      "ParentId": "",
+      "Name": "Total Products",
+      "Product Line": ""
+    },
+    {
+      "Key": "P1000",
+      "ParentId": "P0000",
+      "Name": "Product Line A",
+      "Product Line": ""
+    },
+    {
+      "Key": "P10001",
+      "ParentId": "P1000",
+      "Name": "Category 1",
+      "Product Line": ""
+    },
+    {
+      "Key": "P10002",
+      "ParentId": "P1000",
+      "Name": "Category 2",
+      "Product Line": ""
+    },
+    {
+      "Key": "P10003",
+      "ParentId": "P1000",
+      "Name": "Category 3",
+      "Product Line": ""
+    },
+    {
+      "Key": "P10004",
+      "ParentId": "P1000",
+      "Name": "Category 4",
+      "Product Line": ""
+    },
+    {
+      "Key": "P2000",
+      "ParentId": "P0000",
+      "Name": "Product Line B",
+      "Product Line": ""
+    },
+    {
+      "Key": "P3000",
+      "ParentId": "P0000",
+      "Name": "Product Line C",
+      "Product Line": ""
+    },
+    {
+      "Key": "P4000",
+      "ParentId": "P0000",
+      "Name": "Product Line D",
+      "Product Line": ""
+    },
+    {
+      "Key": "P5000",
+      "ParentId": "",
+      "Name": "Total Services",
+      "Product Line": ""
+    }
+  ]
+}

@@ -1,0 +1,253 @@
+{
+  "table_name": "version",
+  "columns": [
+    {
+      "name": "Key",
+      "sample_values": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "ACT"
+      ],
+      "description": "Key contains various text labels or string categories.  Example values: 1, 2, 3."
+    },
+    {
+      "name": "ParentId",
+      "sample_values": [
+        "",
+        "1",
+        "2",
+        "4",
+        "3"
+      ],
+      "description": "ParentId appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 4, 2, 3."
+    },
+    {
+      "name": "Name",
+      "sample_values": [
+        "Actual Versions",
+        "Budget Versions",
+        "Forecast Versions",
+        "Calculated Versions",
+        "Actual"
+      ],
+      "description": "Name seems to store names or named entities.  Example values: Budget, Actual Versions, Budget Versions."
+    },
+    {
+      "name": "VersionType",
+      "sample_values": [
+        "0",
+        "2",
+        "1",
+        "3"
+      ],
+      "description": "VersionType appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 1, 3, 0."
+    },
+    {
+      "name": "Status",
+      "sample_values": [
+        "",
+        "1"
+      ],
+      "description": "Status appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 1, ."
+    },
+    {
+      "name": "RuleSet",
+      "sample_values": [
+        "",
+        "061291169d6b4ad3a5cf52f804a7a568",
+        "eba0d8fa33ad4dfaa0997438e4557b01"
+      ],
+      "description": "RuleSet is likely a categorical field with values such as: , eba0d8fa33ad4dfaa0997438e4557b01, 061291169d6b4ad3a5cf52f804a7a568.  Example values: , eba0d8fa33ad4dfaa0997438e4557b01, 061291169d6b4ad3a5cf52f804a7a568."
+    },
+    {
+      "name": "StartPeriod",
+      "sample_values": [
+        "",
+        "2025M04",
+        "2025M07",
+        "2025M10"
+      ],
+      "description": "StartPeriod is likely a categorical field with values such as: , 2025M07, 2025M04.  Example values: , 2025M04, 2025M07."
+    },
+    {
+      "name": "EndPeriod",
+      "sample_values": [
+        ""
+      ],
+      "description": "EndPeriod appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    },
+    {
+      "name": "CarryForward",
+      "sample_values": [
+        "",
+        "ACT"
+      ],
+      "description": "CarryForward is likely a categorical field with values such as: , ACT.  Example values: , ACT."
+    },
+    {
+      "name": "CalculationMethod",
+      "sample_values": [
+        ""
+      ],
+      "description": "CalculationMethod appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    },
+    {
+      "name": "ReferenceVersion",
+      "sample_values": [
+        ""
+      ],
+      "description": "ReferenceVersion appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    },
+    {
+      "name": "TimeLevel",
+      "sample_values": [
+        ""
+      ],
+      "description": "TimeLevel appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    }
+  ],
+  "sample_rows": [
+    {
+      "Key": "1",
+      "ParentId": "",
+      "Name": "Actual Versions",
+      "VersionType": "0",
+      "Status": "",
+      "RuleSet": "",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    },
+    {
+      "Key": "2",
+      "ParentId": "",
+      "Name": "Budget Versions",
+      "VersionType": "0",
+      "Status": "",
+      "RuleSet": "",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    },
+    {
+      "Key": "3",
+      "ParentId": "",
+      "Name": "Forecast Versions",
+      "VersionType": "0",
+      "Status": "",
+      "RuleSet": "",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    },
+    {
+      "Key": "4",
+      "ParentId": "",
+      "Name": "Calculated Versions",
+      "VersionType": "0",
+      "Status": "",
+      "RuleSet": "",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    },
+    {
+      "Key": "ACT",
+      "ParentId": "1",
+      "Name": "Actual",
+      "VersionType": "2",
+      "Status": "1",
+      "RuleSet": "061291169d6b4ad3a5cf52f804a7a568",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    },
+    {
+      "Key": "BUD01",
+      "ParentId": "2",
+      "Name": "Budget",
+      "VersionType": "1",
+      "Status": "1",
+      "RuleSet": "eba0d8fa33ad4dfaa0997438e4557b01",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    },
+    {
+      "Key": "BUD02",
+      "ParentId": "2",
+      "Name": "Budget",
+      "VersionType": "1",
+      "Status": "1",
+      "RuleSet": "eba0d8fa33ad4dfaa0997438e4557b01",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    },
+    {
+      "Key": "PQACT",
+      "ParentId": "4",
+      "Name": "Prior Quarter Actual",
+      "VersionType": "3",
+      "Status": "",
+      "RuleSet": "",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    },
+    {
+      "Key": "PQVAR_PCT",
+      "ParentId": "4",
+      "Name": "QoQ Growth (%)",
+      "VersionType": "3",
+      "Status": "1",
+      "RuleSet": "",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    },
+    {
+      "Key": "PYACT",
+      "ParentId": "4",
+      "Name": "Prior Year Actual",
+      "VersionType": "3",
+      "Status": "",
+      "RuleSet": "",
+      "StartPeriod": "",
+      "EndPeriod": "",
+      "CarryForward": "",
+      "CalculationMethod": "",
+      "ReferenceVersion": "",
+      "TimeLevel": ""
+    }
+  ]
+}

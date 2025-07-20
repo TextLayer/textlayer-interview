@@ -1,0 +1,76 @@
+{
+  "account": [
+    "Key",
+    "ParentId",
+    "Name",
+    "UNARY_OPERATOR",
+    "AccountType",
+    "CalculationMethod",
+    "DebitCredit",
+    "LineItemRequired",
+    "NonLeafInput",
+    "NumericFormat",
+    "PreventDataEntry",
+    "TCMethod",
+    "TCFormulaMDX",
+    "ProceduralCalc",
+    "CurrencyConversionMethod"
+  ],
+  "customer": [
+    "Key",
+    "ParentId",
+    "Name",
+    "Channel",
+    "Channel Parent",
+    "Customer Since",
+    "Industry",
+    "Location",
+    "Sales Manager",
+    "Salesperson"
+  ],
+  "other": [
+    "Key",
+    "ParentId",
+    "Name"
+  ],
+  "product": [
+    "Key",
+    "ParentId",
+    "Name",
+    "Product Line"
+  ],
+  "time": [
+    "Name",
+    "Month",
+    "StartPeriod",
+    "EndPeriod",
+    "Year",
+    "Quarter",
+    "FiscalQuarterNumber",
+    "FiscalMonthNumber",
+    "MonthAbbreviation",
+    "FiscalMonthAbbreviationWithYear",
+    "MonthWithYear"
+  ],
+  "time_perspective": [
+    "Key",
+    "ParentId",
+    "Name",
+    "CalculationMethod",
+    "MemberType"
+  ],
+  "version": [
+    "Key",
+    "ParentId",
+    "Name",
+    "VersionType",
+    "Status",
+    "RuleSet",
+    "StartPeriod",
+    "EndPeriod",
+    "CarryForward",
+    "CalculationMethod",
+    "ReferenceVersion",
+    "TimeLevel"
+  ]
+}

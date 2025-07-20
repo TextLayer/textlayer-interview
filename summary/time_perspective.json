@@ -1,0 +1,60 @@
+{
+  "table_name": "time_perspective",
+  "columns": [
+    {
+      "name": "Key",
+      "sample_values": [
+        "BASE",
+        "YTD"
+      ],
+      "description": "Key is likely a categorical field with values such as: YTD, BASE.  Example values: BASE, YTD."
+    },
+    {
+      "name": "ParentId",
+      "sample_values": [
+        ""
+      ],
+      "description": "ParentId appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    },
+    {
+      "name": "Name",
+      "sample_values": [
+        "Base",
+        "Year"
+      ],
+      "description": "Name seems to store names or named entities.  Example values: Base, Year."
+    },
+    {
+      "name": "CalculationMethod",
+      "sample_values": [
+        "Input",
+        "YTD"
+      ],
+      "description": "CalculationMethod is likely a categorical field with values such as: YTD, Input.  Example values: Input, YTD."
+    },
+    {
+      "name": "MemberType",
+      "sample_values": [
+        "0",
+        "1"
+      ],
+      "description": "MemberType appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 0, 1."
+    }
+  ],
+  "sample_rows": [
+    {
+      "Key": "BASE",
+      "ParentId": "",
+      "Name": "Base",
+      "CalculationMethod": "Input",
+      "MemberType": "0"
+    },
+    {
+      "Key": "YTD",
+      "ParentId": "",
+      "Name": "Year",
+      "CalculationMethod": "YTD",
+      "MemberType": "1"
+    }
+  ]
+}

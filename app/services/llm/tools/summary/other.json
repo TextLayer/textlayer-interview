@@ -1,0 +1,90 @@
+{
+  "table_name": "other",
+  "columns": [
+    {
+      "name": "Key",
+      "sample_values": [
+        "NO",
+        "TP",
+        "TV",
+        "Y1",
+        "Y2"
+      ],
+      "description": "Key may represent binary labels such as yes/no or true/false.  Example values: NO, TP, TV."
+    },
+    {
+      "name": "ParentId",
+      "sample_values": [
+        "",
+        "TV",
+        "TP",
+        "Y1",
+        "Y2"
+      ],
+      "description": "ParentId is likely a categorical field with values such as: , Y1, Y2.  Example values: Y1, Y2, ."
+    },
+    {
+      "name": "Name",
+      "sample_values": [
+        "No Other",
+        "Total Platform",
+        "Total Revenue",
+        "2025",
+        "2026"
+      ],
+      "description": "Name seems to store names or named entities.  Example values: No Other, Total Platform, Total Revenue."
+    }
+  ],
+  "sample_rows": [
+    {
+      "Key": "NO",
+      "ParentId": "",
+      "Name": "No Other"
+    },
+    {
+      "Key": "TP",
+      "ParentId": "",
+      "Name": "Total Platform"
+    },
+    {
+      "Key": "TV",
+      "ParentId": "",
+      "Name": "Total Revenue"
+    },
+    {
+      "Key": "Y1",
+      "ParentId": "TV",
+      "Name": "2025"
+    },
+    {
+      "Key": "Y2",
+      "ParentId": "TV",
+      "Name": "2026"
+    },
+    {
+      "Key": "001",
+      "ParentId": "TP",
+      "Name": "Cloud"
+    },
+    {
+      "Key": "002",
+      "ParentId": "TP",
+      "Name": "On-Prem"
+    },
+    {
+      "Key": "01",
+      "ParentId": "Y1",
+      "Name": "2025M01"
+    },
+    {
+      "Key": "02",
+      "ParentId": "Y1",
+      "Name": "2025M02"
+    },
+    {
+      "Key": "03",
+      "ParentId": "Y1",
+      "Name": "2025M03"
+    }
+  ]
+}

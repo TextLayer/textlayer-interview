@@ -1,0 +1,309 @@
+{
+  "table_name": "account",
+  "columns": [
+    {
+      "name": "Key",
+      "sample_values": [
+        "40",
+        "400",
+        "4000",
+        "4010",
+        "4020"
+      ],
+      "description": "Key contains various text labels or string categories.  Example values: 40, 400, 4000."
+    },
+    {
+      "name": "ParentId",
+      "sample_values": [
+        "",
+        "40",
+        "400",
+        "500",
+        "ARR"
+      ],
+      "description": "ParentId contains various text labels or string categories.  Example values: QTY, O, ARR."
+    },
+    {
+      "name": "Name",
+      "sample_values": [
+        "Gross Margin",
+        "Gross Revenue",
+        "Product Revenue",
+        "Service Revenue",
+        "Other Revenue"
+      ],
+      "description": "Name seems to store names or named entities.  Example values: Direct Labor, Direct Material, Product Revenue."
+    },
+    {
+      "name": "UNARY_OPERATOR",
+      "sample_values": [
+        "~",
+        "+",
+        "-"
+      ],
+      "description": "UNARY_OPERATOR is likely a categorical field with values such as: -, +, ~.  Example values: ~, +, -."
+    },
+    {
+      "name": "AccountType",
+      "sample_values": [
+        "1",
+        "0",
+        "4",
+        "3"
+      ],
+      "description": "AccountType appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 0, 4, 1."
+    },
+    {
+      "name": "CalculationMethod",
+      "sample_values": [
+        ""
+      ],
+      "description": "CalculationMethod appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    },
+    {
+      "name": "DebitCredit",
+      "sample_values": [
+        "1",
+        "0",
+        "2"
+      ],
+      "description": "DebitCredit appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 0, 2, 1."
+    },
+    {
+      "name": "LineItemRequired",
+      "sample_values": [
+        ""
+      ],
+      "description": "LineItemRequired appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    },
+    {
+      "name": "NonLeafInput",
+      "sample_values": [
+        ""
+      ],
+      "description": "NonLeafInput appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    },
+    {
+      "name": "NumericFormat",
+      "sample_values": [
+        "#,###",
+        "0",
+        "0.00%",
+        "#,##0",
+        "0%"
+      ],
+      "description": "NumericFormat is likely a categorical field with values such as: 0, 0.00%, #,###.  Example values: #,###, 0.00%, 0."
+    },
+    {
+      "name": "PreventDataEntry",
+      "sample_values": [
+        ""
+      ],
+      "description": "PreventDataEntry appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    },
+    {
+      "name": "TCMethod",
+      "sample_values": [
+        "0",
+        "5",
+        "3"
+      ],
+      "description": "TCMethod appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 0, 5, 3."
+    },
+    {
+      "name": "TCFormulaMDX",
+      "sample_values": [
+        "",
+        "1"
+      ],
+      "description": "TCFormulaMDX appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: , 1."
+    },
+    {
+      "name": "ProceduralCalc",
+      "sample_values": [
+        ""
+      ],
+      "description": "ProceduralCalc appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: ."
+    },
+    {
+      "name": "CurrencyConversionMethod",
+      "sample_values": [
+        "",
+        "0"
+      ],
+      "description": "CurrencyConversionMethod appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: , 0."
+    }
+  ],
+  "sample_rows": [
+    {
+      "Key": "40",
+      "ParentId": "",
+      "Name": "Gross Margin",
+      "UNARY_OPERATOR": "~",
+      "AccountType": "1",
+      "CalculationMethod": "",
+      "DebitCredit": "1",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    },
+    {
+      "Key": "400",
+      "ParentId": "40",
+      "Name": "Gross Revenue",
+      "UNARY_OPERATOR": "+",
+      "AccountType": "1",
+      "CalculationMethod": "",
+      "DebitCredit": "1",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    },
+    {
+      "Key": "4000",
+      "ParentId": "400",
+      "Name": "Product Revenue",
+      "UNARY_OPERATOR": "+",
+      "AccountType": "1",
+      "CalculationMethod": "",
+      "DebitCredit": "1",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "1",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    },
+    {
+      "Key": "4010",
+      "ParentId": "400",
+      "Name": "Service Revenue",
+      "UNARY_OPERATOR": "+",
+      "AccountType": "1",
+      "CalculationMethod": "",
+      "DebitCredit": "1",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    },
+    {
+      "Key": "4020",
+      "ParentId": "400",
+      "Name": "Other Revenue",
+      "UNARY_OPERATOR": "+",
+      "AccountType": "1",
+      "CalculationMethod": "",
+      "DebitCredit": "1",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    },
+    {
+      "Key": "500",
+      "ParentId": "40",
+      "Name": "Cost of Revenue",
+      "UNARY_OPERATOR": "-",
+      "AccountType": "0",
+      "CalculationMethod": "",
+      "DebitCredit": "0",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    },
+    {
+      "Key": "5200",
+      "ParentId": "500",
+      "Name": "Direct Labor",
+      "UNARY_OPERATOR": "+",
+      "AccountType": "0",
+      "CalculationMethod": "",
+      "DebitCredit": "0",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    },
+    {
+      "Key": "5210",
+      "ParentId": "500",
+      "Name": "Direct Material",
+      "UNARY_OPERATOR": "+",
+      "AccountType": "0",
+      "CalculationMethod": "",
+      "DebitCredit": "0",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    },
+    {
+      "Key": "5220",
+      "ParentId": "500",
+      "Name": "Manufacturing Overhead",
+      "UNARY_OPERATOR": "+",
+      "AccountType": "0",
+      "CalculationMethod": "",
+      "DebitCredit": "0",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    },
+    {
+      "Key": "ARR",
+      "ParentId": "",
+      "Name": "Recurring Revenue",
+      "UNARY_OPERATOR": "~",
+      "AccountType": "4",
+      "CalculationMethod": "",
+      "DebitCredit": "2",
+      "LineItemRequired": "",
+      "NonLeafInput": "",
+      "NumericFormat": "#,###",
+      "PreventDataEntry": "",
+      "TCMethod": "0",
+      "TCFormulaMDX": "",
+      "ProceduralCalc": "",
+      "CurrencyConversionMethod": ""
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "table_name": "time",
+  "columns": [
+    {
+      "name": "Name",
+      "sample_values": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "description": "Name seems to store names or named entities.  Example values: January, February, March."
+    },
+    {
+      "name": "Month",
+      "sample_values": [
+        "2018M01",
+        "2018M02",
+        "2018M03",
+        "2018M04",
+        "2018M05"
+      ],
+      "description": "Month contains various text labels or string categories.  Example values: 2018M01, 2018M02, 2018M03."
+    },
+    {
+      "name": "StartPeriod",
+      "sample_values": [
+        "2018-01-01",
+        "2018-02-01",
+        "2018-03-01",
+        "2018-04-01",
+        "2018-05-01"
+      ],
+      "description": "StartPeriod contains various text labels or string categories.  Example values: 2018-01-01, 2018-02-01, 2018-03-01."
+    },
+    {
+      "name": "EndPeriod",
+      "sample_values": [
+        "2018-01-31",
+        "2018-02-28",
+        "2018-03-31",
+        "2018-04-30",
+        "2018-05-31"
+      ],
+      "description": "EndPeriod contains various text labels or string categories.  Example values: 2018-01-31, 2018-02-28, 2018-03-31."
+    },
+    {
+      "name": "Year",
+      "sample_values": [
+        "2018",
+        "2019",
+        "2020",
+        "2021",
+        "2022"
+      ],
+      "description": "Year appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 2018, 2019, 2020."
+    },
+    {
+      "name": "Quarter",
+      "sample_values": [
+        "2018Q1",
+        "2018Q2",
+        "2018Q3",
+        "2018Q4",
+        "2019Q1"
+      ],
+      "description": "Quarter contains various text labels or string categories.  Example values: 2018Q1, 2018Q2, 2018Q3."
+    },
+    {
+      "name": "FiscalQuarterNumber",
+      "sample_values": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "description": "FiscalQuarterNumber appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 1, 2, 3."
+    },
+    {
+      "name": "FiscalMonthNumber",
+      "sample_values": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "description": "FiscalMonthNumber appears to contain ID-like strings (e.g., codes or unique identifiers).  Example values: 1, 2, 3."
+    },
+    {
+      "name": "MonthAbbreviation",
+      "sample_values": [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May"
+      ],
+      "description": "MonthAbbreviation is likely a categorical field with values such as: Mar, Jan, Feb.  Example values: Jan, Feb, Mar."
+    },
+    {
+      "name": "FiscalMonthAbbreviationWithYear",
+      "sample_values": [
+        "Jan2018",
+        "Feb2018",
+        "Mar2018",
+        "Apr2018",
+        "May2018"
+      ],
+      "description": "FiscalMonthAbbreviationWithYear contains various text labels or string categories.  Example values: Jan2018, Feb2018, Mar2018."
+    },
+    {
+      "name": "MonthWithYear",
+      "sample_values": [
+        "January2018",
+        "February2018",
+        "March2018",
+        "April2018",
+        "May2018"
+      ],
+      "description": "MonthWithYear contains various text labels or string categories.  Example values: January2018, February2018, March2018."
+    }
+  ],
+  "sample_rows": [
+    {
+      "Name": "January",
+      "Month": "2018M01",
+      "StartPeriod": "2018-01-01",
+      "EndPeriod": "2018-01-31",
+      "Year": "2018",
+      "Quarter": "2018Q1",
+      "FiscalQuarterNumber": "1",
+      "FiscalMonthNumber": "1",
+      "MonthAbbreviation": "Jan",
+      "FiscalMonthAbbreviationWithYear": "Jan2018",
+      "MonthWithYear": "January2018"
+    },
+    {
+      "Name": "February",
+      "Month": "2018M02",
+      "StartPeriod": "2018-02-01",
+      "EndPeriod": "2018-02-28",
+      "Year": "2018",
+      "Quarter": "2018Q1",
+      "FiscalQuarterNumber": "1",
+      "FiscalMonthNumber": "2",
+      "MonthAbbreviation": "Feb",
+      "FiscalMonthAbbreviationWithYear": "Feb2018",
+      "MonthWithYear": "February2018"
+    },
+    {
+      "Name": "March",
+      "Month": "2018M03",
+      "StartPeriod": "2018-03-01",
+      "EndPeriod": "2018-03-31",
+      "Year": "2018",
+      "Quarter": "2018Q1",
+      "FiscalQuarterNumber": "1",
+      "FiscalMonthNumber": "3",
+      "MonthAbbreviation": "Mar",
+      "FiscalMonthAbbreviationWithYear": "Mar2018",
+      "MonthWithYear": "March2018"
+    },
+    {
+      "Name": "April",
+      "Month": "2018M04",
+      "StartPeriod": "2018-04-01",
+      "EndPeriod": "2018-04-30",
+      "Year": "2018",
+      "Quarter": "2018Q2",
+      "FiscalQuarterNumber": "2",
+      "FiscalMonthNumber": "4",
+      "MonthAbbreviation": "Apr",
+      "FiscalMonthAbbreviationWithYear": "Apr2018",
+      "MonthWithYear": "April2018"
+    },
+    {
+      "Name": "May",
+      "Month": "2018M05",
+      "StartPeriod": "2018-05-01",
+      "EndPeriod": "2018-05-31",
+      "Year": "2018",
+      "Quarter": "2018Q2",
+      "FiscalQuarterNumber": "2",
+      "FiscalMonthNumber": "5",
+      "MonthAbbreviation": "May",
+      "FiscalMonthAbbreviationWithYear": "May2018",
+      "MonthWithYear": "May2018"
+    },
+    {
+      "Name": "June",
+      "Month": "2018M06",
+      "StartPeriod": "2018-06-01",
+      "EndPeriod": "2018-06-30",
+      "Year": "2018",
+      "Quarter": "2018Q2",
+      "FiscalQuarterNumber": "2",
+      "FiscalMonthNumber": "6",
+      "MonthAbbreviation": "Jun",
+      "FiscalMonthAbbreviationWithYear": "Jun2018",
+      "MonthWithYear": "June2018"
+    },
+    {
+      "Name": "July",
+      "Month": "2018M07",
+      "StartPeriod": "2018-07-01",
+      "EndPeriod": "2018-07-31",
+      "Year": "2018",
+      "Quarter": "2018Q3",
+      "FiscalQuarterNumber": "3",
+      "FiscalMonthNumber": "7",
+      "MonthAbbreviation": "Jul",
+      "FiscalMonthAbbreviationWithYear": "Jul2018",
+      "MonthWithYear": "July2018"
+    },
+    {
+      "Name": "August",
+      "Month": "2018M08",
+      "StartPeriod": "2018-08-01",
+      "EndPeriod": "2018-08-31",
+      "Year": "2018",
+      "Quarter": "2018Q3",
+      "FiscalQuarterNumber": "3",
+      "FiscalMonthNumber": "8",
+      "MonthAbbreviation": "Aug",
+      "FiscalMonthAbbreviationWithYear": "Aug2018",
+      "MonthWithYear": "August2018"
+    },
+    {
+      "Name": "September",
+      "Month": "2018M09",
+      "StartPeriod": "2018-09-01",
+      "EndPeriod": "2018-09-30",
+      "Year": "2018",
+      "Quarter": "2018Q3",
+      "FiscalQuarterNumber": "3",
+      "FiscalMonthNumber": "9",
+      "MonthAbbreviation": "Sep",
+      "FiscalMonthAbbreviationWithYear": "Sep2018",
+      "MonthWithYear": "September2018"
+    },
+    {
+      "Name": "October",
+      "Month": "2018M10",
+      "StartPeriod": "2018-10-01",
+      "EndPeriod": "2018-10-31",
+      "Year": "2018",
+      "Quarter": "2018Q4",
+      "FiscalQuarterNumber": "4",
+      "FiscalMonthNumber": "10",
+      "MonthAbbreviation": "Oct",
+      "FiscalMonthAbbreviationWithYear": "Oct2018",
+      "MonthWithYear": "October2018"
+    }
+  ]
+}
