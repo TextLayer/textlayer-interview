@@ -9,6 +9,12 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+    env:
+      CANDIDATE_ID: ${{ github.event.pull_request.body }}
+      REPOSITORY: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event.number }}
+      ASHBY_API_KEY: ${{ secrets.ASHBY_API_KEY }}
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -65,11 +71,54 @@ jobs:
         run: |
           curl --request POST \
                --url https://api.ashbyhq.com/candidate.createNote \
-               --header 'accept: application/json' \
+               -u $ASHBY_API_KEY: \
+               --header 'accept: application/json; version=1' \
                --header 'content-type: application/json' \
-               --header 'authorization: Bearer ${{ secrets.ASHBY_API_KEY }}' \
                --data '{
                  "sendNotifications": true,
-                 "candidateId": "e26238a9-c368-420a-9c55-753f3ea808bd",
-                 "note": "@Colton Rhyason, Technical review completed. You can find the feedback here: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}"
+                 "candidateId": "'$CANDIDATE_ID'",
+                 "note": "Technical review completed. You can find the feedback here: https://github.com/'$REPOSITORY'/pull/'$PR_NUMBER'"
+               }'
+
+      - name: Get candidate info from Ashby
+        id: candidate-info
+        run: |
+          response=$(curl --request POST \
+                          --url https://api.ashbyhq.com/candidate.info \
+                          -u $ASHBY_API_KEY: \
+                          --header 'accept: application/json; version=1' \
+                          --header 'content-type: application/json' \
+                          --data '{
+                            "id": "'$CANDIDATE_ID'"
+                          }')
+          
+          application_id=$(echo "$response" | jq -r '.results.applicationIds[0]')
+          echo "application_id=$application_id" >> $GITHUB_OUTPUT
+
+      - name: Send email notification
+        run: |
+          curl --request POST \
+               --url https://api.sendgrid.com/v3/mail/send \
+               --header 'Authorization: Bearer '$SENDGRID_API_KEY'' \
+               --header 'Content-Type: application/json' \
+               --data '{
+                 "personalizations": [
+                   {
+                     "to": [
+                       {
+                         "email": "colton@textlayer.ai"
+                       }
+                     ],
+                     "subject": "Application note has been added"
+                   }
+                 ],
+                 "from": {
+                   "email": "services@textlayer.ai"
+                 },
+                 "content": [
+                   {
+                     "type": "text/plain",
+                     "value": "Application note has been added: https://app.ashbyhq.com/candidates/pipeline/active/right-side/candidates/'$CANDIDATE_ID'/applications/${{ steps.candidate-info.outputs.application_id }}/feed"
+                   }
+                 ]
                }'
