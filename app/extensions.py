@@ -1,7 +1,1 @@
-from flask_cors import CORS
-from flask_mail import Mail
-from flask_marshmallow import Marshmallow
-
-mail = Mail()
-ma = Marshmallow()
-cors = CORS()
+ZnJvbSBmbGFza19jb3JzIGltcG9ydCBDT1JTCmZyb20gZmxhc2tfbWFpbCBpbXBvcnQgTWFpbApmcm9tIGZsYXNrX21hcnNobWFsbG93IGltcG9ydCBNYXJzaG1hbGxvdwoKbWFpbCA9IE1haWwoKQptYSA9IE1hcnNobWFsbG93KCkKY29ycyA9IENPUlMoKQ==
