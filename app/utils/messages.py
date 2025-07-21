@@ -1,12 +1,1 @@
-class Error:
-    REQUEST_FAILED = {"message": "Request failed to complete"}
-    BAD_REQUEST = {'message': 'Bad Request'}
-    NOT_FOUND = {'message': 'Not Found'}
-    SCHEMA_VALIDATION_FAILED = {'message': 'Failed to validate schema'}
-    UNAUTHORIZED = {'message': 'Unauthorized'}
-
-
-class Info:
-    ACCEPTED = {"message": "accepted"}
-    RECORD_NOT_FOUND = {'message': 'Record not found'}
-    NO_RECORDS_FOUND = {'message': 'No records found'}
+Y2xhc3MgRXJyb3I6CiAgICBSRVFVRVNUX0ZBSUxFRCA9IHsibWVzc2FnZSI6ICJSZXF1ZXN0IGZhaWxlZCB0byBjb21wbGV0ZSJ9CiAgICBCQURfUkVRVUVTVCA9IHsnbWVzc2FnZSc6ICdCYWQgUmVxdWVzdCd9CiAgICBOT1RfRk9VTkQgPSB7J21lc3NhZ2UnOiAnTm90IEZvdW5kJ30KICAgIFNDSEVNQV9WQUxJREFUSU9OX0ZBSUxFRCA9IHsnbWVzc2FnZSc6ICdGYWlsZWQgdG8gdmFsaWRhdGUgc2NoZW1hJ30KICAgIFVOQVVUSE9SSVpFRCA9IHsnbWVzc2FnZSc6ICdVbmF1dGhvcml6ZWQnfQoKCmNsYXNzIEluZm86CiAgICBBQ0NFUFRFRCA9IHsibWVzc2FnZSI6ICJhY2NlcHRlZCJ9CiAgICBSRUNPUkRfTk9UX0ZPVU5EID0geydtZXNzYWdlJzogJ1JlY29yZCBub3QgZm91bmQnfQogICAgTk9fUkVDT1JEU19GT1VORCA9IHsnbWVzc2FnZSc6ICdObyByZWNvcmRzIGZvdW5kJ30=
