@@ -7,15 +7,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     # LLM
     KNN_EMBEDDING_DIMENSION = int(os.environ.get('KNN_EMBEDDING_DIMENSION', 1536))
-    OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+    OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
     CHAT_MODEL = os.environ.get("CHAT_MODEL", "gpt-4o-mini")
     EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small")
 
     # Langfuse
-    LANGFUSE_PUBLIC_KEY = os.environ.get('LANGFUSE_PUBLIC_KEY')
-    LANGFUSE_SECRET_KEY = os.environ.get('LANGFUSE_SECRET_KEY')
-    LANGFUSE_HOST = os.environ.get('LANGFUSE_HOST')
+    LANGFUSE_PUBLIC_KEY = os.environ.get('LANGFUSE_PUBLIC_KEY', "")
+    LANGFUSE_SECRET_KEY = os.environ.get('LANGFUSE_SECRET_KEY', "")
+    LANGFUSE_HOST = os.environ.get('LANGFUSE_HOST', "")
 
+    # Only set up Langfuse callbacks if all credentials are provided
     if all([LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, LANGFUSE_HOST]):
         litellm.success_callback = ["langfuse"]
         litellm.failure_callback = ["langfuse"]
