@@ -1,13 +1,1 @@
-from app import ma
-
-
-class ChatMessageSchema(ma.Schema):
-    role = ma.String(required=True)
-    content = ma.String(required=True)
-
-
-class ChatMessagesSchema(ma.Schema):
-    messages = ma.List(ma.Nested(ChatMessageSchema), required=True)
-
-
-chat_messages_schema = ChatMessagesSchema()
+ZnJvbSBhcHAgaW1wb3J0IG1hCgoKY2xhc3MgQ2hhdE1lc3NhZ2VTY2hlbWEobWEuU2NoZW1hKToKICAgIHJvbGUgPSBtYS5TdHJpbmcocmVxdWlyZWQ9VHJ1ZSkKICAgIGNvbnRlbnQgPSBtYS5TdHJpbmcocmVxdWlyZWQ9VHJ1ZSkKCgpjbGFzcyBDaGF0TWVzc2FnZXNTY2hlbWEobWEuU2NoZW1hKToKICAgIG1lc3NhZ2VzID0gbWEuTGlzdChtYS5OZXN0ZWQoQ2hhdE1lc3NhZ2VTY2hlbWEpLCByZXF1aXJlZD1UcnVlKQoKCmNoYXRfbWVzc2FnZXNfc2NoZW1hID0gQ2hhdE1lc3NhZ2VzU2NoZW1hKCkK
