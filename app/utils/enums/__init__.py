@@ -1,8 +1,1 @@
-from enum import Enum
-
-
-class ListableEnum(Enum):
-
-    @classmethod
-    def to_list(cls):
-        return list(map(lambda c: c.value, cls))
+ZnJvbSBlbnVtIGltcG9ydCBFbnVtCgoKY2xhc3MgTGlzdGFibGVFbnVtKEVudW0pOgoKICAgIEBjbGFzc21ldGhvZAogICAgZGVmIHRvX2xpc3QoY2xzKToKICAgICAgICByZXR1cm4gbGlzdChtYXAobGFtYmRhIGM6IGMudmFsdWUsIGNscykp
