@@ -3,13 +3,14 @@ on:
   pull_request:
     types: [opened]
 
+permissions:
+  contents: write
+  pull-requests: write
+  repository-projects: write
+
 jobs:
   technical-review:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
     env:
       CANDIDATE_ID: ${{ github.event.pull_request.body }}
       REPOSITORY: ${{ github.repository }}
