@@ -7,8 +7,9 @@ jobs:
   technical-review:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
+      repository-projects: write
     env:
       CANDIDATE_ID: ${{ github.event.pull_request.body }}
       REPOSITORY: ${{ github.repository }}
