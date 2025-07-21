@@ -1,11 +1,1 @@
-import time
-
-from datetime import datetime, timezone
-
-
-def get_timestamp(with_nanoseconds=False) -> str:
-    dt = datetime.now(timezone.utc)
-    if with_nanoseconds:
-        nanoseconds = time.time_ns() % 1_000_000_000  # Extract nanoseconds
-        return f"{dt.strftime('%Y-%m-%d %H:%M:%S')}.{nanoseconds:09d}"
-    return dt.strftime("%Y-%m-%d %H:%M:%S")
+aW1wb3J0IHRpbWUKCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lLCB0aW1lem9uZQoKCmRlZiBnZXRfdGltZXN0YW1wKHdpdGhfbmFub3NlY29uZHM9RmFsc2UpIC0+IHN0cjoKICAgIGR0ID0gZGF0ZXRpbWUubm93KHRpbWV6b25lLnV0YykKICAgIGlmIHdpdGhfbmFub3NlY29uZHM6CiAgICAgICAgbmFub3NlY29uZHMgPSB0aW1lLnRpbWVfbnMoKSAlIDFfMDAwXzAwMF8wMDAgICMgRXh0cmFjdCBuYW5vc2Vjb25kcwogICAgICAgIHJldHVybiBmIntkdC5zdHJmdGltZSgnJVktJW0tJWQgJUg6JU06JVMnKX0ue25hbm9zZWNvbmRzOjA5ZH0iCiAgICByZXR1cm4gZHQuc3RyZnRpbWUoIiVZLSVtLSVkICVIOiVNOiVTIikK
