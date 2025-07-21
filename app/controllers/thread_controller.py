@@ -1,11 +1,1 @@
-from app.commands.threads.process_chat_message import ProcessChatMessageCommand
-
-from app.controllers.controller import Controller
-
-
-class ThreadController(Controller):
-    """
-    A controller for threads.
-    """
-    def process_chat_message(self, chat_messages: list) -> list:
-        return self.executor.execute_write(ProcessChatMessageCommand(chat_messages))
+ZnJvbSBhcHAuY29tbWFuZHMudGhyZWFkcy5wcm9jZXNzX2NoYXRfbWVzc2FnZSBpbXBvcnQgUHJvY2Vzc0NoYXRNZXNzYWdlQ29tbWFuZAoKZnJvbSBhcHAuY29udHJvbGxlcnMuY29udHJvbGxlciBpbXBvcnQgQ29udHJvbGxlcgoKCmNsYXNzIFRocmVhZENvbnRyb2xsZXIoQ29udHJvbGxlcik6CiAgICAiIiIKICAgIEEgY29udHJvbGxlciBmb3IgdGhyZWFkcy4KICAgICIiIgogICAgZGVmIHByb2Nlc3NfY2hhdF9tZXNzYWdlKHNlbGYsIGNoYXRfbWVzc2FnZXM6IGxpc3QpIC0+IGxpc3Q6CiAgICAgICAgcmV0dXJuIHNlbGYuZXhlY3V0b3IuZXhlY3V0ZV93cml0ZShQcm9jZXNzQ2hhdE1lc3NhZ2VDb21tYW5kKGNoYXRfbWVzc2FnZXMpKQo=
