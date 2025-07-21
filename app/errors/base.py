@@ -1,10 +1,1 @@
-
-class BaseAPIException(Exception):
-    message = None
-
-    def __init__(self, message, *args: object) -> None:
-        super().__init__(*args)
-        self.messages = message
-
-    def get_message(self):
-        return self.messages
+CmNsYXNzIEJhc2VBUElFeGNlcHRpb24oRXhjZXB0aW9uKToKICAgIG1lc3NhZ2UgPSBOb25lCgogICAgZGVmIF9faW5pdF9fKHNlbGYsIG1lc3NhZ2UsICphcmdzOiBvYmplY3QpIC0+IE5vbmU6CiAgICAgICAgc3VwZXIoKS5fX2luaXRfXygqYXJncykKICAgICAgICBzZWxmLm1lc3NhZ2VzID0gbWVzc2FnZQoKICAgIGRlZiBnZXRfbWVzc2FnZShzZWxmKToKICAgICAgICByZXR1cm4gc2VsZi5tZXNzYWdlcwo=
