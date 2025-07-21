@@ -39,7 +39,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Review code submission
-        uses: textlayer/claude-code-action@v1
+        uses: textlayer/claude-code-action@v1.1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ steps.app-token.outputs.token }}
