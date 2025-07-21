@@ -1,8 +1,1 @@
-class ReadCommand:
-    def execute(self):
-        raise NotImplementedError
-
-
-class WriteCommand:
-    def execute(self):
-        raise NotImplementedError
+Y2xhc3MgUmVhZENvbW1hbmQ6CiAgICBkZWYgZXhlY3V0ZShzZWxmKToKICAgICAgICByYWlzZSBOb3RJbXBsZW1lbnRlZEVycm9yCgoKY2xhc3MgV3JpdGVDb21tYW5kOgogICAgZGVmIGV4ZWN1dGUoc2VsZik6CiAgICAgICAgcmFpc2UgTm90SW1wbGVtZW50ZWRFcnJvcg==
