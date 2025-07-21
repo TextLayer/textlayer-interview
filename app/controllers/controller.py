@@ -1,4 +1,1 @@
-from app.core.executor import Executor
-
-class Controller:
-    executor = Executor.getInstance()
+ZnJvbSBhcHAuY29yZS5leGVjdXRvciBpbXBvcnQgRXhlY3V0b3IKCmNsYXNzIENvbnRyb2xsZXI6CiAgICBleGVjdXRvciA9IEV4ZWN1dG9yLmdldEluc3RhbmNlKCk=
