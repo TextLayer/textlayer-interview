@@ -1,17 +1,1 @@
-import logging
-
-from flask import request
-
-from app import logger
-
-
-def log_request_info():
-    if logger.isEnabledFor(logging.INFO):
-        logger.info(request.headers)
-        logger.info(request.get_json(silent=True))
-
-
-def log_response_info(response):
-    if logger.isEnabledFor(logging.INFO):
-        logger.info(response.data)
-    return response
+aW1wb3J0IGxvZ2dpbmcKCmZyb20gZmxhc2sgaW1wb3J0IHJlcXVlc3QKCmZyb20gYXBwIGltcG9ydCBsb2dnZXIKCgpkZWYgbG9nX3JlcXVlc3RfaW5mbygpOgogICAgaWYgbG9nZ2VyLmlzRW5hYmxlZEZvcihsb2dnaW5nLklORk8pOgogICAgICAgIGxvZ2dlci5pbmZvKHJlcXVlc3QuaGVhZGVycykKICAgICAgICBsb2dnZXIuaW5mbyhyZXF1ZXN0LmdldF9qc29uKHNpbGVudD1UcnVlKSkKCgpkZWYgbG9nX3Jlc3BvbnNlX2luZm8ocmVzcG9uc2UpOgogICAgaWYgbG9nZ2VyLmlzRW5hYmxlZEZvcihsb2dnaW5nLklORk8pOgogICAgICAgIGxvZ2dlci5pbmZvKHJlc3BvbnNlLmRhdGEpCiAgICByZXR1cm4gcmVzcG9uc2UK
