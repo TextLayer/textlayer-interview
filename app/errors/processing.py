@@ -1,6 +1,1 @@
-from app.errors.base import BaseAPIException
-
-
-class ProcessingException(BaseAPIException):
-    def __init__(self, message, *args: object) -> None:
-        super().__init__(message, *args)
+ZnJvbSBhcHAuZXJyb3JzLmJhc2UgaW1wb3J0IEJhc2VBUElFeGNlcHRpb24KCgpjbGFzcyBQcm9jZXNzaW5nRXhjZXB0aW9uKEJhc2VBUElFeGNlcHRpb24pOgogICAgZGVmIF9faW5pdF9fKHNlbGYsIG1lc3NhZ2UsICphcmdzOiBvYmplY3QpIC0+IE5vbmU6CiAgICAgICAgc3VwZXIoKS5fX2luaXRfXyhtZXNzYWdlLCAqYXJncyk=
