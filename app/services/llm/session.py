@@ -7,6 +7,8 @@ from langfuse.decorators import langfuse_context
 from litellm import completion, embedding
 from vaul import StructuredOutput
 
+from app.services.llm.prompts.chat_prompt import chat_prompt
+
 import tiktoken
 
 
@@ -209,6 +211,7 @@ class LLMSession:
         :param kwargs: Additional parameters for the chat call.
         :return: Chat model response.
         """
+        messages = chat_prompt() + messages
         chat_config: Dict[str, Any] = {
             "model": self.chat_model,
             "messages": messages,
