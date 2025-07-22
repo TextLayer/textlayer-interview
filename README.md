@@ -1,3 +1,4 @@
+# TextLayer - Universal Text-to-SQL Analytics Platform
 # TextLayer Technical Interview
 
 <div align="center">
@@ -116,7 +117,7 @@ TextLayer Core is a template for building AI applications. This interview versio
 
 The TextLayer Core template implements a clean, modular architecture for AI applications:
 
-1. **Request Handling**: 
+1. **Request Handling**:
    - Controllers receive and process incoming API requests
    - Validation through schema definitions
 
@@ -152,11 +153,11 @@ Example trace tags implementation:
 def add_numbers(a: int, b: int) -> int:
     """
     Example function demonstrating Langfuse trace logging.
-    
+
     Args:
         a: First number to add
         b: Second number to add
-        
+
     Returns:
         Sum of the two numbers
     """
@@ -202,7 +203,7 @@ textlayer-interview/
 ├── app/                # Application package
 │   ├── __init__.py     # App initialization
 │   ├── commands/       # Command handlers
-│   ├── controllers/    # API controllers 
+│   ├── controllers/    # API controllers
 │   ├── core/           # Core functionality
 │   ├── errors/         # Error handling
 │   ├── middlewares/    # HTTP middlewares
@@ -260,5 +261,4 @@ When working on the project, consider these key extension points:
 - Show your understanding of Python best practices
 - Consider edge cases and error handling
 - Document your code appropriately
-- Be prepared to explain your design decisions 
-
+- Be prepared to explain your design decisions
