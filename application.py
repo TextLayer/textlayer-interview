@@ -1,9 +1,9 @@
-import click
 import os
 
-from app import create_app
-
+import click
 from dotenv import load_dotenv
+
+from app import create_app
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 if os.path.exists(dotenv_path):
@@ -29,3 +29,9 @@ def test(coverage, test_names):
         exit(0)
 
     exit(1)
+
+
+if __name__ == '__main__':
+    # Port 5000 is often used by AirPlay on macOS, so use 5001
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='127.0.0.1', port=port, debug=True)
