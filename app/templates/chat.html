@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Chat - TextLayer{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <!-- Welcome Message -->
+    <div class="welcome-message" id="welcomeMessage">
+        <div class="welcome-content">
+            <i class="fas fa-chart-line welcome-icon"></i>
+            <h2>Welcome to TextLayer Financial Chat</h2>
+            <p>Ask me anything about your financial data. I can help you analyze revenue, sales trends, product performance, and more!</p>
+            <div class="example-queries">
+                <h3>Try asking:</h3>
+                <div class="example-buttons">
+                    <button class="example-btn" onclick="sendExampleQuery('What were the top 5 revenue products last quarter?')">
+                        <i class="fas fa-trophy"></i>
+                        Top revenue products
+                    </button>
+                    <button class="example-btn" onclick="sendExampleQuery('Show me sales trends for Q4')">
+                        <i class="fas fa-chart-line"></i>
+                        Sales trends
+                    </button>
+                    <button class="example-btn" onclick="sendExampleQuery('Which products had the highest growth rate?')">
+                        <i class="fas fa-arrow-up"></i>
+                        Growth analysis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="chat-messages" id="chatMessages">
+        <!-- Messages will be dynamically added here -->
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-message" id="loadingMessage" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <span class="loading-text">Processing your query...</span>
+        </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-input-container">
+        <form class="chat-form" id="chatForm">
+            <div class="input-wrapper">
+                <textarea
+                    id="messageInput"
+                    placeholder="Ask about your financial data..."
+                    rows="1"
+                    maxlength="4000"
+                ></textarea>
+                <button type="submit" id="sendButton" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="input-footer">
+                <div class="input-footer-left">
+                    <span class="char-count">
+                        <span id="charCount">0</span>/4000
+                    </span>
+                    <div class="streaming-controls">
+                        <div class="streaming-toggle">
+                            <input type="checkbox" id="streamingToggle">
+                            <label for="streamingToggle">Streaming responses</label>
+                        </div>
+                    </div>
+                </div>
+                <span class="input-hint">
+                    Press Enter to send, Shift+Enter for new line
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Error Modal -->
+<div class="modal" id="errorModal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+            <button class="modal-close" onclick="closeErrorModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="errorMessage">An error occurred while processing your request.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="closeErrorModal()">OK</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Initialize chat when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeChat();
+});
+</script>
+{% endblock %}
