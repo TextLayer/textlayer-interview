@@ -1,6 +1,7 @@
 from typing import Tuple
-
+from flask import Flask
 from app.errors import ValidationException
+from app.routes.thread_routes import thread_routes
 
 
 def get_arg(args, arg_name, type=str, default=None):
@@ -38,3 +39,7 @@ def get_pagination_args(args, default_page=1, default_per_page=10, max_per_page=
     # Ensure per_page is within the allowed range
     per_page = min(per_page, max_per_page)
     return page, per_page
+
+def init_routes(app: Flask):
+    app.register_blueprint(thread_routes, url_prefix="/threads")
+
