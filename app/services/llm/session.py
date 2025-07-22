@@ -1,13 +1,12 @@
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+
+import tiktoken
 from flask import current_app
-
-from app import logger
-
 from langfuse.decorators import langfuse_context
 from litellm import completion, embedding
 from vaul import StructuredOutput
 
-import tiktoken
+from app import logger
 
 
 class LLMSession:
@@ -52,8 +51,28 @@ class LLMSession:
             "token_limit": 200_000,
         },
         {
+            "name": "claude-3-5-sonnet-20241022",
+            "description": "The Claude 3.5 Sonnet model.",
+            "token_limit": 200_000,
+        },
+        {
+            "name": "claude-4-sonnet-20250514",
+            "description": "The Claude 4 Sonnet model.",
+            "token_limit": 200_000,
+        },
+        {
+            "name": "claude-sonnet-4-20250514",
+            "description": "The Claude Sonnet 4 model.",
+            "token_limit": 200_000,
+        },
+        {
             "name": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
             "description": "The Claude 3.5v2 Sonnet model.",
+            "token_limit": 200_000,
+        },
+        {
+            "name": "us.anthropic.claude-3-5-haiku-20241022-v1:0",
+            "description": "The Claude 3.5 Haiku model.",
             "token_limit": 200_000,
         },
         {
@@ -91,13 +110,13 @@ class LLMSession:
         },
     ]
 
-    DEFAULT_CHAT_MODEL = "us.anthropic.claude-3-5-sonnet-20241022-v2:0"
+    DEFAULT_CHAT_MODEL = "claude-3-5-sonnet-20241022"
     DEFAULT_EMBEDDING_MODEL = "amazon.titan-embed-text-v2:0"
 
     def __init__(
         self,
-        chat_model: str = DEFAULT_CHAT_MODEL,
-        embedding_model: str = DEFAULT_EMBEDDING_MODEL,
+        chat_model: str = None,
+        embedding_model: str = None,
     ) -> None:
         """
         Initialize a new LLMSession instance.
@@ -105,6 +124,11 @@ class LLMSession:
         :param chat_model: The chat model name.
         :param embedding_model: The embedding model name.
         """
+        # Use environment config first, then fallback to defaults
+        if chat_model is None:
+            chat_model = current_app.config.get("CHAT_MODEL") or self.DEFAULT_CHAT_MODEL
+        if embedding_model is None:
+            embedding_model = current_app.config.get("EMBEDDING_MODEL") or self.DEFAULT_EMBEDDING_MODEL
         self.chat_model = self.validate_chat_model(chat_model)
         self.embedding_model = self.validate_embedding_model(embedding_model)
         self.knn_embedding_dimensions = self._get_embedding_model_dimensions(
@@ -233,6 +257,49 @@ class LLMSession:
             return response
         except Exception as e:
             logger.error(f"Error sending messages to chat model: {e}")
+            raise
+
+    def chat_stream(
+        self,
+        messages: List[Dict[str, str]],
+        tools: Optional[List[Any]] = None,
+        **kwargs,
+    ) -> Any:
+        """
+        Send messages to the chat model and return a streaming response.
+
+        :param messages: List of message dictionaries.
+        :param tools: Optional list of tool dictionaries.
+        :param kwargs: Additional parameters for the chat call.
+        :return: Streaming chat model response.
+        """
+        chat_config: Dict[str, Any] = {
+            "model": self.chat_model,
+            "messages": messages,
+            "stream": True,
+            **kwargs,
+        }
+        if tools:
+            chat_config["tools"] = tools
+
+        guardrail_id = current_app.config.get("BEDROCK_GUARDRAILS_ID")
+        if guardrail_id:
+            chat_config["guardrailConfig"] = {
+                "guardrailIdentifier": guardrail_id,
+                "guardrailVersion": "DRAFT",
+                "trace": "enabled",
+            }
+
+        chat_config.setdefault("metadata", {}).update(self._get_metadata())
+
+        try:
+            response_stream = completion(**chat_config)
+            logger.debug("Streaming chat response initiated")
+            return response_stream
+        except Exception as e:
+            logger.error(
+                f"Error sending streaming messages to chat model: {e}"
+            )
             raise
 
     def get_structured_output(
