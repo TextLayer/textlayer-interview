@@ -1,85 +1,102 @@
+"""
+DuckDB Database Datastore Implementation
+
+This module provides DuckDB-specific implementation of the BaseDatastore interface.
+"""
+
+from typing import List
+
 import duckdb
 import pandas as pd
-from typing import Optional, Dict, Any
+
+from app.services.datastore.base_datastore import BaseDatastore, ConnectionError
 
 
+class DuckDBDatastore(BaseDatastore):
+    """DuckDB implementation of the database datastore interface."""
 
-class DuckDBDatastore:
-    """
-    A datastore implementation for DuckDB.
-    """
-
-    def __init__(self, database: Optional[str] = None) -> None:
+    def __init__(self, database: str):
         """
-        Initialize the DuckDBDataStore.
+        Initialize DuckDB datastore.
 
         Args:
-            database (str, optional): Path to the DuckDB database file.
-                                      If None, an in-memory database is used.
+            database: Path to DuckDB database file
         """
-        if database is None:
-            database = ':memory:'
-        self.connection = duckdb.connect(database=database)
+        super().__init__(database)
+        self.database = database
+        self._connection = None
 
-    def execute(
-        self, query: str, parameters: Optional[Dict[str, Any]] = None
-    ) -> pd.DataFrame:
+    def _get_connection(self):
+        """Get or create database connection."""
+        if self._connection is None:
+            try:
+                self._connection = duckdb.connect(self.database)
+            except Exception as e:
+                raise ConnectionError(f"Failed to connect to DuckDB: {e}")
+        return self._connection
+
+    def execute(self, sql: str) -> pd.DataFrame:
+        """Execute SQL query and return results as DataFrame."""
+        try:
+            conn = self._get_connection()
+            result = conn.execute(sql).fetchdf()
+            return result
+        except Exception as e:
+            raise Exception(f"DuckDB query execution failed: {e}")
+
+    def get_tables(self) -> List[str]:
+        """Get list of all tables in the database."""
+        sql = """
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'main'
         """
-        Execute a SQL query and return the result as a DataFrame.
+        result = self.execute(sql)
+        return result['table_name'].tolist()
 
-        Args:
-            query (str): The SQL query to execute.
-            parameters (Dict[str, Any], optional): Parameters to include in the query.
-
-        Returns:
-            pd.DataFrame: The query result.
-        """
-        if parameters:
-            return self.connection.execute(query, parameters).df()
-        else:
-            return self.connection.execute(query).df()
-        
-
-    def get_columns(
-        self, table_name: str, schema_name: Optional[str] = None
-    ) -> pd.DataFrame:
-        """
-        Retrieve column information for a specific table.
-
-        Args:
-            table_name (str): Name of the table.
-            schema_name (str, optional): Schema name.
-
-        Returns:
-            pd.DataFrame: DataFrame with column information.
-        """
-        schema_filter = f"AND table_schema = '{schema_name}'" if schema_name else ""
-        query = f"""
-        SELECT column_name, data_type, is_nullable, character_maximum_length
+    def get_columns(self, table_name: str) -> pd.DataFrame:
+        """Get column information for a specific table."""
+        sql = f"""
+        SELECT
+            column_name,
+            data_type,
+            is_nullable
         FROM information_schema.columns
-        WHERE table_name = '{table_name}' {schema_filter}
+        WHERE table_name = '{table_name}'
+        ORDER BY ordinal_position
         """
-        return self.execute(query)
+        return self.execute(sql)
 
-    def get_sample_data(
-        self, table_name: str, limit: int = 5, schema_name: Optional[str] = None
-    ) -> pd.DataFrame:
-        """
-        Retrieve a sample of data from a specific table.
+    def get_sample_data(self, table_name: str, limit: int = 3) -> pd.DataFrame:
+        """Get sample data from a table."""
+        sql = f"SELECT * FROM {table_name} LIMIT {limit}"
+        return self.execute(sql)
 
-        Args:
-            table_name (str): Name of the table.
-            limit (int, optional): Number of rows to retrieve. Defaults to 5.
-            schema_name (str, optional): Schema name.
+    def get_row_count(self, table_name: str) -> int:
+        """Get total row count for a table."""
+        sql = f"SELECT COUNT(*) as count FROM {table_name}"
+        result = self.execute(sql)
+        return int(result['count'].iloc[0])
 
-        Returns:
-            pd.DataFrame: DataFrame with sample data.
-        """
-        schema_prefix = f"{schema_name}." if schema_name else ""
-        query = f"""
-        SELECT *
-        FROM {schema_prefix}{table_name}
-        ORDER BY RANDOM()
-        LIMIT {limit}
-        """
-        return self.execute(query)
+    def _get_dialect(self) -> str:
+        """Get the SQL dialect name."""
+        return 'duckdb'
+
+    def test_connection(self) -> bool:
+        """Test if the database connection is working."""
+        try:
+            conn = self._get_connection()
+            conn.execute("SELECT 1").fetchone()
+            return True
+        except Exception:
+            return False
+
+    def close(self):
+        """Close database connection."""
+        if self._connection:
+            self._connection.close()
+            self._connection = None
+
+    def __del__(self):
+        """Cleanup on object destruction."""
+        self.close()
