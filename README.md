@@ -262,3 +262,57 @@ When working on the project, consider these key extension points:
 - Document your code appropriately
 - Be prepared to explain your design decisions 
 
+
+## 🧠 Candidate Notes – Implementation Overview
+
+I approached this assessment with a focus on setting up the project cleanly and verifying each step manually using the terminal.
+
+1. **Cloned the Repository**  
+   I started by cloning the project repository into my local environment using the terminal.
+
+2. **Set Up the Python Environment**  
+   I created a virtual environment using `python -m venv venv` and activated it to isolate dependencies.
+
+3. **Installed Dependencies**  
+   Using `pip install -r requirements.txt`, I installed all the required Python packages.
+
+4. **Configured Environment Variables**  
+   I copied the example environment file using `cp .env.example .env` and updated it with my OpenAI API key and other required values.
+
+5. **Verified Server Setup**  
+   I ran the Flask server using `FLASK_APP=application.py flask run` and confirmed the application launched correctly at `http://127.0.0.1:5000`.
+
+6. **Implemented the Tool**  
+   I implemented the `text_to_sql` tool logic inside `app/services/llm/tools/text_to_sql.py`, ensuring it accepts messages, extracts a SQL query, executes it using DuckDB, and returns results.
+
+7. **Tested the Feature**  
+   I used `curl` in the terminal to simulate a POST request to the `/chat` endpoint, passing sample input and confirming the correct SQL query and results were returned in the response.
+
+8. **Cleaned Up**  
+   Before submission, I removed the `venv` and any unnecessary cache files to keep the folder lightweight.
+
+9. **Packaged for Submission**  
+   I zipped the project directory using `zip -r textlayer-submission.zip textlayer-interview-0.1.3 -x "textlayer-interview-0.1.3/venv/*"` and verified the contents were complete.
+
+Throughout the task, I relied solely on the terminal to set up, code, and test the application. I avoided using Git or any GUI-based tools to keep things simple and aligned with the instructions.
+
+
+
+
+## ✅ Testing Notes
+
+To verify the functionality, I used the `curl` command to simulate an API call to the `/chat` endpoint with a sample message asking for a SQL query. The tool correctly extracted SQL, queried the database, and returned the expected results, confirming end-to-end functionality.
+
+## ⚠️ Assumptions
+
+- I assumed the database schema (`app/data/data.db`) was pre-populated with relevant tables for testing.
+- The last message in the request payload was expected to contain the user’s natural language input for conversion.
+
+## 💡 Potential Improvements
+
+- Add more robust error messaging to clarify SQL parsing or execution failures.
+- Support multiple message formats or enhance prompt engineering for more complex queries.
+
+## 🔐 API Key Note
+
+I used my personal OpenAI API key for this assessment as instructed in the `.env` file. No token from the email was used during execution.
