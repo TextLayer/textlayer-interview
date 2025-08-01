@@ -375,3 +375,40 @@ class LLMSession:
         except Exception as e:
             logger.error(f"Error generating embeddings: {e}")
             raise ValueError("Error generating embeddings.") from e
+        
+    def stream_chat(
+        self,
+        messages: List[Dict[str, str]],
+        tools: Optional[List[Any]] = None,
+        **kwargs,
+    ):
+        """
+        Stream chat response from the LLM.
+        Yields incremental content chunks.
+        """
+        chat_config: Dict[str, Any] = {
+            "model": self.chat_model,
+            "messages": messages,
+            "stream": True,
+            **kwargs,
+        }
+
+        if tools:
+            chat_config["tools"] = tools
+
+        guardrail_id = current_app.config.get("BEDROCK_GUARDRAILS_ID")
+        if guardrail_id:
+            chat_config["guardrailConfig"] = {
+                "guardrailIdentifier": guardrail_id,
+                "guardrailVersion": "DRAFT",
+                "trace": "enabled",
+            }
+
+        chat_config.setdefault("metadata", {}).update(self._get_metadata())
+
+        try:
+            for chunk in completion(**chat_config):
+                yield chunk
+        except Exception as e:
+            logger.error(f"Error streaming chat completion: {e}")
+            raise
