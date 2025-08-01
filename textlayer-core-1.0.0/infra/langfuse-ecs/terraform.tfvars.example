@@ -1,0 +1,46 @@
+# AWS Region
+aws_region = "us-east-1"
+
+# VPC Configuration
+vpc_cidr = "10.0.0.0/16"
+availability_zones = ["us-east-1a", "us-east-1b"]
+
+# S3 Bucket - You can customize the prefix (a random suffix will be added automatically)
+s3_bucket_name = "langfuse-blob-storage"
+
+# Database Configuration
+db_instance_class = "db.r5.large"
+db_name = "langfuse"
+db_username = "langfuseadmin"
+db_password = "YourStrongPasswordHere" # Required - Password for the Aurora PostgreSQL database
+
+# Clickhouse Configuration
+clickhouse_username = "default"
+clickhouse_password = "YourStrongClickhousePasswordHere" # Required - Password for Clickhouse OLAP database
+
+# ElastiCache (Valkey) Configuration
+elasticache_node_type = "cache.t3.small"
+
+# Langfuse Configuration
+langfuse_web_image = "langfuse/langfuse:latest"
+langfuse_worker_image = "langfuse/langfuse-worker:latest"
+clickhouse_image = "clickhouse/clickhouse-server:latest"
+next_public_langfuse_cloud_region = "us"
+default_admin_email = "admin@example.com"
+
+# Required for Langfuse authentication (NextAuth) - set a secure random string
+# This is used to encrypt session tokens and cookies for the Langfuse web interface
+jwt_secret = "YourStrongJWTSecretHere" 
+
+# Scaling Configuration
+langfuse_web_desired_count = 2
+langfuse_worker_desired_count = 2
+clickhouse_desired_count = 1
+
+# Task Configuration
+web_task_cpu = 1024
+web_task_memory = 2048
+worker_task_cpu = 1024
+worker_task_memory = 2048
+clickhouse_task_cpu = 2048
+clickhouse_task_memory = 4096 

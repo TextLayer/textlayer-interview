@@ -1,12 +1,11 @@
 from typing import Dict, List
-from flask import current_app, g
+from flask import current_app
 
 from app import logger
 from app.core.commands import ReadCommand
 from app.errors import ValidationException
 from app.services.llm.prompts.chat_prompt import chat_prompt
 from app.services.llm.session import LLMSession
-from app.services.llm.structured_outputs import text_to_sql
 from app.services.llm.tools.text_to_sql import text_to_sql as text_to_sql_tool
 from app.utils.formatters import get_timestamp
 
@@ -22,6 +21,12 @@ class ProcessChatMessageCommand(ReadCommand):
     """
     Process a chat message.
     """
+    SQL_KEYWORDS = [
+        "sql", "query", "database", "table", "tables", "select", "from", "where",
+        "join", "count", "sum", "average", "group by", "order by", "insert",
+        "update", "delete", "sales", "customers", "orders", "products", "data", "insight", "report"
+    ]
+
     def __init__(self, chat_messages: List[Dict[str, str]]) -> None:
         self.chat_messages = chat_messages
         self.llm_session = LLMSession(
@@ -32,23 +37,30 @@ class ProcessChatMessageCommand(ReadCommand):
         self.toolkit.add_tools(*[text_to_sql_tool])
 
     def validate(self) -> None:
-        """
-        Validate the command.
-        """
         if not self.chat_messages:
             raise ValidationException("Chat messages are required.")
-        
         return True
-    
-    def execute(self) -> None:
-        """
-        Execute the command.
-        """
+
+    def is_sql_related(self, question: str) -> bool:
+        question_lower = question.lower()
+        return any(keyword in question_lower for keyword in self.SQL_KEYWORDS)
+
+    def execute(self) -> List[Dict[str, str]]:
         logger.debug(
             f'Command {self.__class__.__name__} started with {len(self.chat_messages)} messages.'
         )
 
         self.validate()
+
+        user_message = self.chat_messages[-1]["content"]
+
+        if not self.is_sql_related(user_message):
+            refusal_message = self.format_message(
+                role="assistant",
+                content="Sorry, I can only answer questions related to data queries and SQL."
+            )
+            self.chat_messages.append(refusal_message)
+            return self.chat_messages
 
         chat_kwargs = {
             "messages": self.prepare_chat_messages(),
@@ -100,12 +112,36 @@ class ProcessChatMessageCommand(ReadCommand):
         else:
             response_message = self.format_message(**response_message_config)
 
-        # Add the messages as the last elements of the list
+        judge_prompt = [
+            {"role": "system", "content": (
+                "You are a senior data analyst reviewing the following assistant response to a user question. "
+                "Evaluate if the SQL result and explanation are correct, clear, and safe. "
+                "If the answer is good, rephrase it for clarity if needed. "
+                "If there are issues, flag them and suggest improvements. "
+                "Output your review and the improved answer if applicable."
+            )},
+            {"role": "user", "content": f"User question: {self.chat_messages[-1]['content']}"},
+            {"role": "assistant", "content": response_message["content"]},
+        ]
+        try:
+            judge_response = self.llm_session.chat(messages=judge_prompt)
+            judged_message = self.format_message(
+                role="judge",
+                content=judge_response.choices[0].message.content,
+                finish_reason=judge_response.choices[0].finish_reason,
+            )
+            self.chat_messages.append(judged_message)
+        except Exception as e:
+            logger.error(f"LLM-as-a-Judge failed: {e}")
+            self.chat_messages.append(self.format_message(
+                role="judge",
+                content="[LLM-as-a-Judge failed to review the answer.]",
+            ))
+
         self.chat_messages.append(response_message)
         self.chat_messages.extend(tool_messages)
 
         return self.chat_messages
-    
 
     @observe()
     def prepare_chat_messages(self) -> list:

@@ -7,6 +7,7 @@ class ChatMessageSchema(ma.Schema):
 
 
 class ChatMessagesSchema(ma.Schema):
+    thread_id = ma.String(required=False)  
     messages = ma.List(ma.Nested(ChatMessageSchema), required=True)
 
 

@@ -2,8 +2,6 @@ from flask import current_app
 from functools import wraps
 from langfuse import Langfuse
 
-from app.utils import logger
-
 
 def prompt(name=None):
     """
