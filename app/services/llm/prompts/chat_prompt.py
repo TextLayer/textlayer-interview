@@ -1,25 +1,24 @@
 from app.services.llm.prompts import prompt
+from app.services.llm.prompts.schema_helper import get_database_schema
 
-
-@prompt()
 def chat_prompt(**kwargs) -> str:
-    """
-    This prompt is used to chat with the LLM.
-
-    You can use the kwargs to pass in data that will be used to generate the prompt.
+    # Get the complete schema with sample data
+    schema = get_database_schema()
     
-    For example, if you want to pass in a list of messages, you can do the following:
-    ```python
-    chat_prompt(example_variable="test")
-    ```
+    return [
+        {"role": "system", "content": f"""{schema}
 
-    You can then use the example_variable in the prompt like this:
-    ```
-    return [
-        {"role": "system", "content": "Your name is %(name)s."} % kwargs
-    ]
-    ```
-    """
-    return [
-        {"role": "system", "content": "You are a helpful assistant."},
+IMPORTANT SQL RULES:
+- Use ONLY the exact table and column names from the schema above
+- Write proper SQL SELECT statements only
+- Column names with spaces need double quotes: "Product Line", "Channel Parent", "Customer Since", "Sales Manager"
+- String values use single quotes: WHERE Name = 'Gross Revenue'
+
+EXAMPLES based on your schema:
+- Show accounts: SELECT Name FROM account
+- Account hierarchy: SELECT a1.Name as Parent, a2.Name as Child FROM account a1 JOIN account a2 ON a1.Key = a2.ParentId WHERE a1.Name = 'Gross Revenue'
+- Customers by region: SELECT Name FROM customer WHERE ParentId = 'C0000'
+- Time periods: SELECT Name, Year, Quarter FROM time WHERE Year = '2018'
+
+Write valid SQL SELECT statements using the exact schema above!"""}
     ]
