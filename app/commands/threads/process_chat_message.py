@@ -9,6 +9,10 @@ from app.services.llm.session import LLMSession
 from app.services.llm.structured_outputs import text_to_sql
 from app.services.llm.tools.text_to_sql import text_to_sql as text_to_sql_tool
 from app.utils.formatters import get_timestamp
+#adding new imports for the sql judge and response enhancer
+from app.services.llm.sql_judge import SQLJudge
+from app.services.llm.prompts.schema_helper import get_database_schema
+from app.services.llm.response_enhancer import ResponseEnhancer
 
 from langfuse.decorators import observe
 from openai import BadRequestError
@@ -131,7 +135,60 @@ class ProcessChatMessageCommand(ReadCommand):
 
     @observe()
     def execute_tool_call(self, tool_call: dict) -> dict:
-        return self.toolkit.run_tool(
-            name=tool_call.function.name,
-            arguments=json.loads(tool_call.function.arguments),
-        )
+        tool_name = tool_call.function.name
+        if tool_name == "text_to_sql":
+            arguments = json.loads(tool_call.function.arguments)
+            generated_sql = arguments.get("sql_query","")
+            user_question = self.chat_messages[-1].get("content", "") if self.chat_messages else ""
+            database_schema = get_database_schema()
+            judge = SQLJudge()
+            review = judge.review_sql(user_question, generated_sql, database_schema)
+
+            if review["verdict"] == "rejected":
+                error_message = f"Query rejected for safety: {review['reason']}"
+                print(error_message)
+                return error_message
+            elif review["verdict"] == "needs_improvement" and review["suggested_sql"]:
+                print(f"Judge feedback: {review.get('reason', 'SQL needs improvement')}")
+                correction_prompt = f"""
+                    The SQL query you generated needs improvement:
+                    
+                    Original question: {user_question}
+                    Your SQL: {generated_sql}
+                    Judge feedback: {review.get('reason', 'Please improve this query')}
+                    
+                    Please generate a corrected SQL query that addresses the feedback.
+                    Return only the corrected SQL query, no explanations.
+                    """
+                correction_response = self.llm_session.complete(correction_prompt)
+                corrected_sql = correction_response.choices[0].message.content.strip()
+
+                if corrected_sql.startswith('```sql'):
+                    corrected_sql = corrected_sql.replace('```sql', '').replace('```', '').strip()
+                print(f"Corrected SQL: {corrected_sql}")
+
+                arguments["sql_query"] = corrected_sql
+                tool_call.function.arguments = json.dumps(arguments)
+            else:
+                print("approved the sql query")
+        try:
+            raw_results = self.toolkit.run_tool(
+                name=tool_call.function.name,
+                arguments=json.loads(tool_call.function.arguments),
+            )
+        except Exception as e:
+            print(f"SQL execution error: {e}")
+            return "I encountered an error while processing your query. Please try a simpler question or try again later."
+
+        if tool_name == "text_to_sql":
+            enhancer = ResponseEnhancer()
+            better_response = enhancer.make_response_better(
+                question=user_question,
+                sql=generated_sql,
+                results=raw_results,
+                schema=database_schema
+                )
+            return better_response
+        return raw_results
+        
+
