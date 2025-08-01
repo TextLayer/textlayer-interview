@@ -16,7 +16,8 @@ from vaul import Toolkit
 from uuid import uuid4
 
 import json
-
+from app.services.datastore.duckdb_datastore import DuckDBDatastore
+from app.utils.schema_helpers import get_database_schema_summary
 
 class ProcessChatMessageCommand(ReadCommand):
     """
@@ -55,6 +56,8 @@ class ProcessChatMessageCommand(ReadCommand):
             "tools": self.toolkit.tool_schemas(),
         }
 
+        logger.debug(f"Prompt sent to LLM: {chat_kwargs['messages']}")
+        
         try:
             response = self.llm_session.chat(**chat_kwargs)
         except BadRequestError as e:
@@ -103,17 +106,18 @@ class ProcessChatMessageCommand(ReadCommand):
         # Add the messages as the last elements of the list
         self.chat_messages.append(response_message)
         self.chat_messages.extend(tool_messages)
-
-        return self.chat_messages
-    
+        
+        return response_message
 
     @observe()
     def prepare_chat_messages(self) -> list:
+        schema = get_database_schema_summary()
+
         trimmed_messages = self.llm_session.trim_message_history(
             messages=self.chat_messages,
         )
 
-        system_prompt = chat_prompt()
+        system_prompt = chat_prompt(schema=schema)
 
         trimmed_messages = system_prompt + trimmed_messages
 
@@ -135,3 +139,27 @@ class ProcessChatMessageCommand(ReadCommand):
             name=tool_call.function.name,
             arguments=json.loads(tool_call.function.arguments),
         )
+    
+    def stream(self):
+        """
+        Stream chat response for Server-Sent Events.
+        Yields: response content chunks as strings.
+        """
+        logger.debug(f"Streaming response for {len(self.chat_messages)} message(s)")
+
+        self.validate()
+
+        chat_kwargs = {
+            "messages": self.prepare_chat_messages(),
+            "tools": self.toolkit.tool_schemas(),
+        }
+
+        try:
+            for chunk in self.llm_session.stream_chat(**chat_kwargs):
+                delta = chunk.choices[0].delta
+                content = delta.get("content", "")
+                if content:
+                    yield content  # We can also wrap this in SSE: yield f"data: {content}\n\n"
+        except Exception as e:
+            logger.error(f"Error in streaming chat: {e}")
+            raise ValidationException("Failed during streaming.")
