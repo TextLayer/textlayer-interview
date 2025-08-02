@@ -21,11 +21,5 @@ def create_job(job_definition, job_queue, job_name, command, job_type, min_memor
 
 
 def create_batch(iterable, batch_size):
-    """
-    Creates a list of batches from an iterable
-    :param iterable: iterable to create batches from
-    :param batch_size: size of each batch
-    :return: list of batches
-    """
     return [iterable[i:i + batch_size] for i in range(0, len(iterable), batch_size)]\
         if len(iterable) > batch_size else [iterable]

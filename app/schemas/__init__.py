@@ -1,10 +1,8 @@
 from app import ma
 from marshmallow import fields, pre_load, validates_schema, ValidationError
 
-# Default formats for date and datetime strings
 DATE_FORMAT = '%Y-%m-%d'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
-
 
 class BaseSchema(ma.Schema):
     """
@@ -16,15 +14,12 @@ class BaseSchema(ma.Schema):
     def clean_input(self, data, **kwargs):
         cleaned = {}
         for key, value in data.items():
-            # Trim string values
             if isinstance(value, str):
                 value = value.strip()
-            # Exclude empty values
             if value in [None, '', 'null']:
                 continue
             cleaned[key] = value
         return cleaned
-
 
 class CleanString(fields.String):
     """
@@ -35,7 +30,6 @@ class CleanString(fields.String):
             value = value.strip()
         return super()._deserialize(value, attr, data, **kwargs)
 
-
 class DateField(fields.Date):
     """
     A custom Date field with a default format.
@@ -43,14 +37,12 @@ class DateField(fields.Date):
     def __init__(self, format=DATE_FORMAT, **kwargs):
         super().__init__(format=format, **kwargs)
 
-
 class DateTimeField(fields.DateTime):
     """
     A custom DateTime field with a default format.
     """
     def __init__(self, format=DATETIME_FORMAT, **kwargs):
         super().__init__(format=format, **kwargs)
-
 
 class DateRangeSchema(BaseSchema):
     """
@@ -66,7 +58,6 @@ class DateRangeSchema(BaseSchema):
     def normalize_dates(self, data, **kwargs):
         for field in ['date_from', 'date_to']:
             if field in data and isinstance(data[field], str):
-                # Remove unwanted time suffixes (e.g., "T00:00:00")
                 data[field] = data[field].replace('T00:00:00', '')
         return data
 
@@ -76,7 +67,6 @@ class DateRangeSchema(BaseSchema):
         date_to = data.get('date_to')
         if date_from and date_to and date_from > date_to:
             raise ValidationError("date_from must be earlier than or equal to date_to.", field_names=['date_from', 'date_to'])
-
 
 class DateTimeRangeSchema(BaseSchema):
     """

@@ -233,6 +233,8 @@ The application includes a test framework. To run tests:
 ```bash
 # Run tests from the CLI
 flask test
+## Test the package with the following command:
+FLASK_APP="application.py" FLASK_ENV="development" flask test
 
 # Run tests with code coverage report
 flask test --coverage
@@ -262,3 +264,9 @@ When working on the project, consider these key extension points:
 - Document your code appropriately
 - Be prepared to explain your design decisions 
 
+
+### Project Extension Implemented
+
+- Implemented LLM-As-a-Judge to improve quality of responses
+- Added a test file to simulate various edge cases of prompting and test LLM-As-a-Judge as well
+- Modified various files to include better prompt engineering methods and enhance the error handling mechanism
