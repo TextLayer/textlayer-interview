@@ -1,4 +1,4 @@
-from flask import make_response
+from flask import make_response, render_template
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from app.middlewares.auth_middleware import get_current_user
@@ -20,19 +20,25 @@ blueprints = {
 
 
 def init_routes(app):
-    app.wsgi_app = DispatcherMiddleware(stop, {'/v1': app.wsgi_app})
+    # Remove the problematic DispatcherMiddleware that was causing all endpoints to return basepath message
+    # app.wsgi_app = DispatcherMiddleware(stop, {'/v1': app.wsgi_app})
 
     app.before_request(get_current_user)
     app.before_request(log_request_info)
     app.after_request(log_response_info)
 
     for path in blueprints:
-        app.register_blueprint(blueprints[path], url_prefix=path)
+        app.register_blueprint(blueprints[path], url_prefix='/v1' + path)
 
     @app.get("/")
     def index():
         return Response({'api_version': 'v1.0', 'api_description': 'TextLayer Core API'},
                         Response.HTTP_SUCCESS).build()
+
+    @app.get("/chat")
+    def chat_interface():
+        """Serve the chat frontend interface"""
+        return render_template('index.html')
 
     @app.get("/health")
     def health():

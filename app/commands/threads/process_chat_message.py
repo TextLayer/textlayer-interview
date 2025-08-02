@@ -57,11 +57,9 @@ class ProcessChatMessageCommand(ReadCommand):
 
         try:
             response = self.llm_session.chat(**chat_kwargs)
-        except BadRequestError as e:
-            raise e
         except Exception as e:
             logger.error(f"Failed to fetch chat response: {e}")
-            raise ValidationException("Error in fetching chat response.")
+            raise  # Re-raise the exception to be handled by the API error handler
 
         tool_messages = []
 

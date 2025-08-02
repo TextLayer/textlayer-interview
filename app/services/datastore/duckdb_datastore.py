@@ -1,4 +1,12 @@
-import duckdb
+try:
+    import duckdb
+    DUCKDB_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: DuckDB not available due to import error: {e}")
+    print("The application will continue without DuckDB functionality.")
+    duckdb = None
+    DUCKDB_AVAILABLE = False
+
 import pandas as pd
 from typing import Optional, Dict, Any
 
@@ -17,6 +25,9 @@ class DuckDBDatastore:
             database (str, optional): Path to the DuckDB database file.
                                       If None, an in-memory database is used.
         """
+        if not DUCKDB_AVAILABLE:
+            raise RuntimeError("DuckDB is not available due to import issues. Please check DuckDB installation.")
+        
         if database is None:
             database = ':memory:'
         self.connection = duckdb.connect(database=database)
