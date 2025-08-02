@@ -5,3 +5,4 @@ from flask_marshmallow import Marshmallow
 mail = Mail()
 ma = Marshmallow()
 cors = CORS()
+

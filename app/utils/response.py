@@ -1,7 +1,8 @@
 from flask import make_response
+import uuid
 
-from app.utils.logger import get_request_id
-
+def get_request_id():
+    return str(uuid.uuid4())
 
 class Response:
     HTTP_SUCCESS = 200

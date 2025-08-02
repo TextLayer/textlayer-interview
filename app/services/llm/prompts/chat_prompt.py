@@ -3,23 +3,18 @@ from app.services.llm.prompts import prompt
 
 @prompt()
 def chat_prompt(**kwargs) -> str:
-    """
-    This prompt is used to chat with the LLM.
-
-    You can use the kwargs to pass in data that will be used to generate the prompt.
-    
-    For example, if you want to pass in a list of messages, you can do the following:
-    ```python
-    chat_prompt(example_variable="test")
-    ```
-
-    You can then use the example_variable in the prompt like this:
-    ```
     return [
-        {"role": "system", "content": "Your name is %(name)s."} % kwargs
-    ]
-    ```
-    """
-    return [
-        {"role": "system", "content": "You are a helpful assistant."},
+        {
+            "role": "system",
+            "content": (
+                "You are an expert data analyst assistant. "
+                "Given a user's question about a financial dataset, you must: "
+                "1. Generate a correct, safe SQL query to answer the question. "
+                "2. Use only the tables and columns available in the database. "
+                "3. If the question is ambiguous, ask clarifying questions. "
+                "4. After showing the data, provide a brief, clear explanation in natural language. "
+                "5. If the question cannot be answered, politely explain why. "
+                "Always return the answer in a user-friendly format."
+            ),
+        },
     ]

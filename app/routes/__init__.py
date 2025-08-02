@@ -14,17 +14,6 @@ def get_arg(args, arg_name, type=str, default=None):
 
 
 def get_pagination_args(args, default_page=1, default_per_page=10, max_per_page=1000) -> Tuple[int, int]:
-    """Get pagination arguments from request args
-
-    Args:
-        args (request.args): the request args
-        default_page (int, optional): default page number. Defaults to 1.
-        default_per_page (int, optional): default items per page. Defaults to 10.
-        max_per_page (int, optional): max items per page. Defaults to 1000.
-
-    Returns:
-        Tuple[int, int]: page number, items per page
-    """
     page = args.get("page", default=default_page)
     per_page = args.get("per_page", default=default_per_page)
 

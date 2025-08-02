@@ -5,7 +5,6 @@ class Error:
     SCHEMA_VALIDATION_FAILED = {'message': 'Failed to validate schema'}
     UNAUTHORIZED = {'message': 'Unauthorized'}
 
-
 class Info:
     ACCEPTED = {"message": "accepted"}
     RECORD_NOT_FOUND = {'message': 'Record not found'}
