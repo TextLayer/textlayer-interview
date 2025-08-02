@@ -1,0 +1,186 @@
+[project]
+name = "textlayer-core"
+version = "0.1.0"
+description = "TextLayer Core: A boilerplate repository for creating Python services."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "aiohappyeyeballs==2.5.0",
+    "aiohttp==3.11.13",
+    "aiosignal==1.3.2",
+    "annotated-types==0.7.0",
+    "anyio==4.8.0",
+    "argcomplete==3.5.3",
+    "async-timeout==5.0.1",
+    "attrs==25.1.0",
+    "backoff==2.2.1",
+    "blinker==1.9.0",
+    "boto3==1.36.21",
+    "botocore==1.36.21",
+    "certifi==2025.1.31",
+    "cfn-flip==1.3.0",
+    "charset-normalizer==3.4.1",
+    "click==8.1.8",
+    "coverage==7.6.12",
+    "distro==1.9.0",
+    "doppler-env==0.3.1",
+    "durationpy==0.9",
+    "exceptiongroup==1.2.2",
+    "filelock==3.17.0",
+    "Flask-Cors==5.0.0",
+    "flask-marshmallow==1.2.1",
+    "flask==2.2.5",
+    "frozenlist==1.5.0",
+    "fsspec==2025.3.0",
+    "h11==0.16.0",
+    "hjson==3.1.0",
+    "httpcore==1.0.9",
+    "httpx==0.28.1",
+    "huggingface-hub==0.29.2",
+    "idna==3.10",
+    "importlib_metadata==8.6.1",
+    "itsdangerous==2.2.0",
+    "Jinja2==3.1.5",
+    "jiter==0.8.2",
+    "jmespath==1.0.1",
+    "jsonschema-specifications==2024.10.1",
+    "jsonschema==4.23.0",
+    "kappa==0.6.0",
+    "langfuse==2.60.0",
+    "litellm==1.66.1",
+    "MarkupSafe==3.0.2",
+    "marshmallow==3.26.1",
+    "multidict==6.1.0",
+    "numpy==2.0.2",
+    "openai==1.74.0",
+    "packaging==24.2",
+    "pandas==2.2.3",
+    "placebo==0.9.0",
+    "propcache==0.3.0",
+    "pydantic_core==2.16.3",
+    "pydantic==2.6.4",
+    "python-dateutil==2.9.0.post0",
+    "python-dotenv==1.0.1",
+    "python-slugify==8.0.4",
+    "pytz==2025.1",
+    "PyYAML==6.0.2",
+    "ratelimiter==1.2.0.post0",
+    "referencing==0.36.2",
+    "regex==2024.11.6",
+    "requests==2.32.3",
+    "rpds-py==0.24.0",
+    "s3transfer==0.11.2",
+    "setuptools==78.1.0",
+    "six==1.17.0",
+    "sniffio==1.3.1",
+    "text-unidecode==1.3",
+    "tiktoken==0.9.0",
+    "tokenizers==0.21.0",
+    "toml==0.10.2",
+    "tqdm==4.67.1",
+    "troposphere==4.9.0",
+    "typing_extensions==4.12.2",
+    "tzdata==2025.1",
+    "urllib3==1.26.20",
+    "vaul==0.2.7",
+    "werkzeug==3.0.3",
+    "wrapt==1.17.2",
+    "yarl==1.18.3",
+    "zappa==0.56.1",
+    "zipp==3.21.0",
+    "gunicorn>=23.0.0",
+    "tabulate==0.9.0",
+    "opensearch-py==2.8.0",
+    "opensearch-dsl==2.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.1.1",
+    "ruff==0.11.0",
+    "pipdeptree==2.25.1",
+    "doppler-env==0.3.1",
+    "flake8==7.2.0",
+    "coverage==7.6.12",
+]
+
+[tool.ruff]
+# Same as Black.
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+# Enable comprehensive linting rules
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    # "C",   # mccabe
+    # "D",   # pydocstyle
+    # "N",   # pep8-naming
+    # "W",   # pycodestyle warnings
+    # "UP",  # pyupgrade
+    # "ANN", # flake8-annotations
+    # "S",   # flake8-bandit
+    # "COM", # flake8-commas
+    # "ISC", # flake8-implicit-str-concat
+    # "RUF", # Ruff-specific rules
+]
+ignore = [
+    "B012", # `break` inside `finally` blocks cause exceptions to be silenced
+]
+
+# Allow autofix for all enabled rules
+fixable = ["ALL"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # Ignore unused imports in __init__ files
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings
+quote-style = "double"
+
+# Like Black, respect magic trailing commas
+skip-magic-trailing-comma = false
+
+# Enable auto-formatting
+line-ending = "auto"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["app"]

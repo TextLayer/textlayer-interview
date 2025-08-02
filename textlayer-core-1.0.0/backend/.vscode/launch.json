@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flask: Run Application",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "flask",
+            "python": "/usr/local/bin/python",
+            "env": {
+                "FLASK_APP": "application.py",
+                "FLASK_DEBUG": "1",
+                "FLASK_RUN_PORT": "8001",
+                "FLASK_RUN_HOST": "0.0.0.0",
+                "FLASK_CONFIG": "DEV",
+                "DOPPLER_ENV": "1" // Enable doppler-env to inject env vars
+            },
+            "args": [
+                "run"
+            ],
+            "jinja": true
+        },
+    ]
+}

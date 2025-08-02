@@ -1,0 +1,129 @@
+name: Release Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g., 1.2.3)"
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [arm64, amd64]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          file: infra/docker/Dockerfile.backend
+          platforms: linux/${{ matrix.platform }}
+          push: false
+          load: true
+          tags: textlayer-core:${{ matrix.platform }}
+
+      - name: Save Docker image
+        run: |
+          mkdir -p /tmp/docker-images
+          docker save textlayer-core:${{ matrix.platform }} > \
+            /tmp/docker-images/textlayer-core-${{ matrix.platform }}.tar
+
+      - name: Upload Docker image
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-${{ matrix.platform }}
+          path: /tmp/docker-images/textlayer-core-${{ matrix.platform }}.tar
+          retention-days: 1
+
+  snyk:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [arm64, amd64]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Download Docker image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image-${{ matrix.platform }}
+          path: /tmp/docker-images
+
+      - name: Load Docker image
+        run: |
+          IMG="textlayer-core-${{ matrix.platform }}.tar"
+          docker load < "/tmp/docker-images/$IMG"
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: textlayer-core:${{ matrix.platform }}
+          args: >-
+            --severity-threshold=high
+            --exclude-base-image-vulns
+            --policy-path=.github/.snyk
+
+  trivy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Download Docker image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image-arm64
+          path: /tmp/docker-images
+
+      - name: Load Docker image
+        run: |
+          docker load < "/tmp/docker-images/textlayer-core-arm64.tar"
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "textlayer-core:arm64"
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
+
+  release:
+    needs: [snyk, trivy]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Use input version
+        run: |
+          echo "PACKAGE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          echo "Using version: $PACKAGE_VERSION"
+
+      - name: Create GitHub release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "v${{ env.PACKAGE_VERSION }}"
+          prerelease: false

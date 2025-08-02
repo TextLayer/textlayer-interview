@@ -1,0 +1,83 @@
+name: TextLayer Core Terraform
+
+on:
+  pull_request:
+    paths:
+      - "infra/backend/**"
+  push:
+    branches: [main]
+    paths:
+      - "infra/backend/**"
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  ENV: dev
+
+jobs:
+  terraform-infrastructure:
+    name: Backend Infrastructure
+    runs-on: ubuntu-latest
+    environment: "Stage"
+    defaults:
+      run:
+        working-directory: ./infra/backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set ENV variable
+        id: setenv
+        run: |
+          echo "ENV=${{ env.ENV }}" >> $GITHUB_ENV
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Terraform Init
+        run: terraform init -backend-config="bucket=tfstate-core-${{ env.ENV }}" -backend-config="key=state-core" -backend-config="region=${{ vars.AWS_REGION }}" -backend-config="encrypt=true"
+        env:
+          TF_INPUT: false
+          TF_VAR_vpc_id: ${{ vars.VPC_ID }}
+          TF_VAR_aws_region: ${{ vars.AWS_REGION }}
+          TF_VAR_environment: ${{ env.ENV }}
+          TF_VAR_hosted_zone: ${{ vars.HOSTED_ZONE }}
+
+      - name: Terraform Format
+        run: terraform fmt
+        continue-on-error: true
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color
+        env:
+          TF_INPUT: false
+          TF_VAR_vpc_id: ${{ vars.VPC_ID }}
+          TF_VAR_aws_region: ${{ vars.AWS_REGION }}
+          TF_VAR_environment: ${{ env.ENV }}
+          TF_VAR_hosted_zone: ${{ vars.HOSTED_ZONE }}
+
+      - name: Terraform Apply
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
+        env:
+          TF_INPUT: false
+          TF_VAR_vpc_id: ${{ vars.VPC_ID }}
+          TF_VAR_aws_region: ${{ vars.AWS_REGION }}
+          TF_VAR_environment: ${{ env.ENV }}
+          TF_VAR_hosted_zone: ${{ vars.HOSTED_ZONE }}

@@ -1,0 +1,21 @@
+---
+name: Hadolint Dockerfile Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  hadolint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint on Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: infra/docker/Dockerfile.backend
+          ignore: DL3033
