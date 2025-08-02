@@ -40,3 +40,14 @@ help:
 	@echo "  make env   - Create .env file from .env.example if it doesn't exist"
 	@echo "  make start - Start the Flask server"
 	@echo "  make clean - Remove virtual environment" 
+
+start:
+	@echo "Starting all textlayer-interview services..."
+	docker-compose up -d
+
+stop:
+	@echo "Stopping all textlayer-interview services..."
+	docker-compose down
+
+logs:
+	docker-compose logs -f

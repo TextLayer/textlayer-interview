@@ -11,3 +11,10 @@ class ChatMessagesSchema(ma.Schema):
 
 
 chat_messages_schema = ChatMessagesSchema()
+
+
+class IngestDBSchema(ma.Schema):
+    source = ma.String(required=True)
+
+
+ingest_db_schema = IngestDBSchema()

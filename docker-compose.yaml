@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  textlayer-interview:
+    container_name: textlayer-interview-core
+    image: textlayer-interview-core:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001" 
+    environment:
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - FLASK_RUN_PORT=5001
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+
+  qdrant:
+    container_name: textlayer-interview-vectordb
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - ./app/data/qdrant:/qdrant/storage
+    restart: unless-stopped
+
+  streamlit:
+    container_name: textlayer-interview-ui
+    image: textlayer-interview-ui:latest
+    build:
+      context: .
+      dockerfile: ./streamlit/Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./app/data:/app/app/data  # Mount data directory for schema diagrams
+    depends_on:
+      - textlayer-interview
+    restart: unless-stopped

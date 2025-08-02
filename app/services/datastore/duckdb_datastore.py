@@ -83,3 +83,22 @@ class DuckDBDatastore:
         LIMIT {limit}
         """
         return self.execute(query)
+
+    def get_tables(self, schema_name: Optional[str] = None) -> pd.DataFrame:
+        """
+        Retrieve a list of all tables in the database.
+
+        Args:
+            schema_name (str, optional): Schema name to filter tables.
+
+        Returns:
+            pd.DataFrame: DataFrame with table information including table names.
+        """
+        schema_filter = f"AND table_schema = '{schema_name}'" if schema_name else ""
+        query = f"""
+        SELECT table_name, table_schema, table_type
+        FROM information_schema.tables
+        WHERE table_type = 'BASE TABLE' {schema_filter}
+        ORDER BY table_name
+        """
+        return self.execute(query)

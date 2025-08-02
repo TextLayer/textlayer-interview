@@ -11,6 +11,10 @@ class Config:
     CHAT_MODEL = os.environ.get("CHAT_MODEL", "gpt-4o-mini")
     EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small")
 
+    # Qdrant
+    QDRANT_HOST = os.environ.get('QDRANT_HOST', 'localhost')
+    QDRANT_PORT = os.environ.get('QDRANT_PORT', 6333)
+
     # Langfuse
     LANGFUSE_PUBLIC_KEY = os.environ.get('LANGFUSE_PUBLIC_KEY')
     LANGFUSE_SECRET_KEY = os.environ.get('LANGFUSE_SECRET_KEY')

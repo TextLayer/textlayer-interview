@@ -34,6 +34,12 @@ LOG_CONFIG = {
             'handlers': ['console'],
             'level': os.environ.get('LOG_LEVEL', 'DEBUG'),
         },
+        'matplotlib': {
+            'level': 'WARNING',
+        },
+        'matplotlib.font_manager': {
+            'level': 'WARNING',
+        },
     }
 }
 

@@ -15,7 +15,7 @@ def text_to_sql(query: str) -> SqlQuery:
 
     # Initialize the DuckDB datastore
     datastore = DuckDBDatastore(
-        database="app/data/data.db"
+        database="app/data/fpa_dev.db"
     )
 
     # Execute the query
