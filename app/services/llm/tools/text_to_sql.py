@@ -1,28 +1,19 @@
 from langfuse.decorators import observe
 from vaul import tool_call
-
 from app import logger
-from app.services.datastore.duckdb_datastore import DuckDBDatastore
-from app.services.llm.structured_outputs.text_to_sql import SqlQuery
+from app.services.llm.workflows.text_to_sql_workflow import run_sql_workflow_sync
 
 
 @tool_call
 @observe
-def text_to_sql(query: str) -> SqlQuery:
-    """A tool for converting natural language queries to SQL queries."""
+def text_to_sql(user_query: str) -> str:
+    """A tool for processing natural language queries that require SQL database for answer generation
+    
+    Args:
+        - user_query: The natural language query sent by the user
+    
+    Returns:
+        - a JSON containing user_query, SQL Query generated, SQL Query Results 
+    """
 
-    logger.info(f"Converting natural language query to SQL query: {query}")
-
-    # Initialize the DuckDB datastore
-    datastore = DuckDBDatastore(
-        database="app/data/data.db"
-    )
-
-    # Execute the query
-    result = datastore.execute(query)
-
-    # Return the result
-    return result.to_markdown(
-        index=False, 
-        floatfmt=".2f"
-        ) if result is not None else ""
+    return run_sql_workflow_sync(user_query=user_query)
