@@ -1,264 +1,141 @@
-# TextLayer Technical Interview
+# TextLayer.ai Interview - Text-to-SQL Agent
 
-<div align="center">
+An intelligent system that converts natural language questions into SQL queries for financial data analysis. Built with **agentic error recovery**, **RAG**, and **knowledge graphs**.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![Python](https://img.shields.io/badge/Python-3.9-blue.svg)
-![License](https://img.shields.io/badge/license-Proprietary-red.svg)
+## 🚀 Quick Start
 
-</div>
-
-This repository contains a simplified version of the TextLayer Core template, specifically designed for technical interview purposes. It provides a foundation for demonstrating your skills in building AI applications with Flask and related technologies.
-
-## 📋 Quick Start
-
-### Using Make (Recommended)
-
-The project includes a Makefile with helpful commands for setup and running:
+### Run with Docker Compose (Recommended)
 
 ```bash
-# Initialize the project (creates venv, installs dependencies, sets up .env)
-make init
+# Start all services
+DOPPLER_TOKEN=your_token_here make start
 
-# Start the Flask server
-make run
+# Stop all services
+make stop
 
-# For help with available commands
-make help
+# Ingest the database (first time only)
+curl -X POST "http://localhost:5001/v1/threads/ingest" \
+  -H "Content-Type: application/json" \
+  -d '{"source": "app/data/fpa_dev.db"}'
 ```
 
-### Manual Setup
+**Access the app:**
+- 🌐 **Chat UI**: http://localhost:8501 (with direct links to other services)
+- 🔧 **API**: http://localhost:5001  
+- 🗃️ **Vector DB Dashboard**: http://localhost:6333/dashboard
 
-1. Clone the repository
-2. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your API keys and configuration
-   ```
-3. Create and activate a virtual environment:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-4. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-5. Run the application:
-   ```bash
-   FLASK_APP=application.py python -m flask run
-   ```
-6. Access the application at http://127.0.0.1:5000
-
-### Using Docker
-
-You can also run the application in a Docker container:
+### Local Development
 
 ```bash
-# Build the Docker image
-docker build -t textlayer-interview .
+# Set up environment
+cp .env.example .env
+# Edit .env with your API keys
 
-# Run the container
-docker run -p 5000:5000 textlayer-interview
+# Install dependencies  
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-# If you need to mount a local directory and pass environment variables
-docker run -p 5000:5000 \
-  -v $(pwd):/app \
-  --env-file .env \
-  textlayer-interview
+# Run Flask API
+FLASK_APP=application.py python -m flask run --port=5001
+
+# Run Streamlit UI (separate terminal)
+streamlit run streamlit_app.py --server.port=8501
 ```
 
-## ⚙️ Configuration
+## ✨ What I Built
 
-The application is configured through environment variables in the `.env` file. Key configuration variables include:
+### 🧠 **Agentic Architecture**
+- **Self-correcting system** that learns from SQL execution errors
+- **Automatic retry** with error context for smarter second attempts
+- **Graceful failure** when queries can't be resolved
 
+### 🔍 **Advanced RAG**  
+- **Three-phase data pipeline**: Schema extraction → Column filtering with LLMs → Vector embedding
+- **Multi-layer filtering system**:
+  - **Pre-filtering**: Regex patterns skip `Key`, `Id`, `ParentId` columns automatically
+  - **LLM-as-a-judge**: Analyzes sample values to distinguish business vs technical data
+- **Intelligent sample analysis**: LLM analyzes 15 sample values per column for filtering decisions
+- **Massive noise reduction**: 479 → 13 batches (97.5% reduction) through smart filtering
+- **Qdrant integration**: 1,536-dimensional embeddings with cosine similarity search
+- **Batch processing**: 100 embeddings per batch with threading control (`time.sleep(0.1)`)
+- **Rich metadata**: Each vector includes table, column, data type, and location context
+
+### 🕸️ **Knowledge Graphs**
+- **NetworkX implementation**: Graph-based schema representation with nodes and edges
+- **Hierarchical structure**: Schema → Tables → Columns with typed relationships
+- **Node metadata**: Each node includes type, name, data_type attributes
+- **Serialization**: Graphs saved as pickle files (`fpa_dev_schema.pkl`) for fast startup
+- **Context injection**: Rich schema context provided to LLM for informed SQL generation
+- **Relationship mapping**: `has_table` and `has_column` edge relationships
+
+### 🎯 **Prompt Engineering**
+- **Agentic chat prompt**: Comprehensive prompt handling schema context, domain values, and error history
+- **DuckDB syntax optimization**: Specific guidance for DuckDB SQL patterns (`SHOW TABLES;`, `DESCRIBE table;`)
+- **Error recovery examples**: Prompt includes examples of how to learn from SQL execution errors
+- **Column filtering prompt**: Specialized LLM-as-a-judge prompt with explicit KEEP/REJECT rules
+- **Business vs technical classification**: Detailed examples of business terms vs system codes
+- **Conservative filtering approach**: "When in doubt, reject" philosophy for high-quality data
+- **Context-aware prompts**: Dynamic prompts that adapt based on available schema and domain data
+
+## 🏗️ Architecture
+
+### Request Flow
 ```
-# Flask Configuration
-FLASK_CONFIG=DEV  # Options: DEV, TEST, STAGING, PROD
-
-# OpenAI Configuration
-OPENAI_API_KEY=sk-your-api-key-here
-CHAT_MODEL=gpt-4o-mini
-EMBEDDING_MODEL=text-embedding-3-small
-KNN_EMBEDDING_DIMENSION=1536
-
-# Langfuse Configuration (for observability)
-LANGFUSE_PUBLIC_KEY=pk-your-public-key-here
-LANGFUSE_SECRET_KEY=sk-your-secret-key-here
-LANGFUSE_HOST=https://cloud.langfuse.com
-```
-
-Make sure to update these values with your actual API keys before running the application.
-
-### Configuration Environment Options
-
-The application supports different environments controlled by the `FLASK_CONFIG` variable:
-
-- **DEV**: Development environment with debug mode enabled
-- **TEST**: Testing environment with testing flags enabled
-- **STAGING**: Staging environment with production-like settings for QA
-- **PROD**: Production environment with optimized settings
-
-## 🔍 Overview
-
-TextLayer Core is a template for building AI applications. This interview version includes the core structure and essential integrations to demonstrate your ability to work with AI services, Flask, and modern Python application architecture.
-
-## ✨ Features
-
-- Flask application structure with modular organization
-- Integration with LiteLLM for unified access to multiple LLM providers
-- Langfuse integration for prompt management and observability
-- Environment-based configuration management
-
-## 🏛️ Architecture
-
-### Application Flow
-
-The TextLayer Core template implements a clean, modular architecture for AI applications:
-
-1. **Request Handling**: 
-   - Controllers receive and process incoming API requests
-   - Validation through schema definitions
-
-2. **Command Processing**:
-   - Business logic is organized in command handlers
-   - Separation of concerns with distinct command modules
-
-3. **Service Integration**:
-   - External services wrapped in service modules
-   - Modular design for extensibility
-
-4. **Response Handling**:
-   - Structured API responses
-   - Error handling with custom error types
-
-### Langfuse Integration
-
-[Langfuse](https://langfuse.com/docs) is integrated throughout the application to provide prompt management and observability:
-
-1. **Prompt Management**:
-   - Centralized storage and versioning of prompts
-   - Prompt templates with variable substitution
-
-2. **Observability with Trace Logging**:
-   - Process flows create Langfuse traces
-   - Key processing steps are tagged with observe markers
-
-Example trace tags implementation:
-
-```python
-# use the @observe tag for logging traces
-@observe()
-def add_numbers(a: int, b: int) -> int:
-    """
-    Example function demonstrating Langfuse trace logging.
-    
-    Args:
-        a: First number to add
-        b: Second number to add
-        
-    Returns:
-        Sum of the two numbers
-    """
-    return a + b
+                   ┌─ RAG Context (Domain Values) ──┐
+User Question ──── ┤                                ├─ LLM Tool Call → SQL Execution
+                   └─ Knowledge Graph (Schema) ─────┘                         ↓
+                                                                        DuckDB Query
+                                                                              ↓
+                                                                      Success/Error
+                                                                              ↓
+                                                             Error Recovery Loop (Append & Retry)
 ```
 
-### LiteLLM Integration
 
-The application uses [LiteLLM](https://docs.litellm.ai/) in the `services/llm` module to provide a unified interface for multiple LLM providers:
-
-1. **Provider Agnostic Interface**:
-   - Single interface to access multiple LLM providers (OpenAI, Anthropic, etc.)
-   - Simplified model switching and fallback mechanisms
-   - Standardized input/output formats
-
-Example LiteLLM usage:
-
-```python
-from litellm import completion
-
-response = completion(
-    model="gpt-4",
-    messages=[{"role": "user", "content": "Analyze this content..."}],
-    temperature=0.7,
-    max_tokens=2000
-)
+### Ingestion Flow
+```
+                          ┌─ Schema Extraction ──→ Knowledge Graph (NetworkX)
+Data Source (DuckDB) ──── ┤                                    
+                          └─ Column Analysis ────→ Domain Values ──→ Embedding ──→ Vector DB
+                                    ↓
+                              LLM Filtering (LLM-as-a-judge)
+                           (Business vs Technical)
 ```
 
-## 🚀 Interview Tasks
+### Services
+- **Flask API** (Port 5001): 
+  - Agentic chat processing with error recovery
+  - DuckDB SQL execution engine
+  - RAG context orchestration
+  - Knowledge graph loading
+- **Qdrant Vector DB** (Port 6333): 
+  - 1,216 business domain value embeddings
+  - Cosine similarity semantic search
+  - Persistent vector storage with metadata
+- **Streamlit UI** (Port 8501): 
+  - Real-time streaming chat interface
+  - Structured response display (SQL + Results + Errors)
+  - Query examples and history management
 
-As part of the interview process, you may be asked to:
+## 🛡️ Technology Stack
 
-1. Extend the application with new features
-2. Modify existing components
-3. Debug issues in the codebase
-4. Optimize performance
-5. Implement best practices for security and scalability
+### **Core AI/ML**
+- **LiteLLM**: Unified interface for multiple LLM providers (OpenAI, Anthropic, AWS Bedrock)
+- **OpenAI Embeddings**: `text-embedding-3-small` for 1,536-dimensional vectors
+- **Toolkit**: LLM tool calling and structured outputs with Pydantic
+- **Qdrant**: High-performance vector database for semantic search
 
-## 📁 Project Structure
+### **Backend & Data**
+- **Flask**: RESTful API with modular architecture (controllers, services, commands)
+- **DuckDB**: In-memory/file-based SQL analytics database for financial data
+- **NetworkX**: Graph library for schema knowledge representation
+- **Pandas**: DataFrame processing for batch operations and SQL results
 
-```
-textlayer-interview/
-├── app/                # Application package
-│   ├── __init__.py     # App initialization
-│   ├── commands/       # Command handlers
-│   ├── controllers/    # API controllers 
-│   ├── core/           # Core functionality
-│   ├── errors/         # Error handling
-│   ├── middlewares/    # HTTP middlewares
-│   ├── models/         # Data models
-│   ├── routes/         # API routes
-│   ├── schemas/        # Data validation
-│   ├── services/       # External services integration
-│   ├── utils/          # Utility functions
-│   ├── aws_triggers/   # AWS triggers (legacy)
-│   ├── cli/            # CLI commands
-│   ├── decorators.py   # Decorators
-│   ├── extensions.py   # Flask extensions
-│   └── log.py          # Logging configuration
-├── application.py      # Application entry point
-├── config.py           # Configuration settings
-├── requirements.txt    # Dependencies
-├── Dockerfile          # Container definition
-├── Makefile            # Build automation
-└── .env.example        # Environment variable template
-```
+### **Infrastructure & DevOps**
+- **Docker Compose**: Multi-service orchestration with persistent volumes
+- **Streamlit**: Interactive web UI with real-time chat components
+- **Doppler**: Secure secret management for API keys and configuration
+- **Langfuse**: LLM observability, prompt management, and request tracing
 
-## 🛠️ Development Guide
-
-### Running Tests
-
-The application includes a test framework. To run tests:
-
-```bash
-# Run tests from the CLI
-flask test
-
-# Run tests with code coverage report
-flask test --coverage
-```
-
-### Project Extension Points
-
-When working on the project, consider these key extension points:
-
-1. **Adding a new API endpoint**:
-   - Create a route in `app/routes/`
-   - Implement a controller in `app/controllers/`
-   - Add request/response schemas in `app/schemas/`
-
-2. **Implementing business logic**:
-   - Add command handlers in `app/commands/`
-   - Ensure proper error handling
-
-3. **Integrating external services**:
-   - Add service connectors in `app/services/`
-
-## 📝 Notes for Candidates
-
-- Focus on demonstrating clean, maintainable code
-- Show your understanding of Python best practices
-- Consider edge cases and error handling
-- Document your code appropriately
-- Be prepared to explain your design decisions 
-
+---
