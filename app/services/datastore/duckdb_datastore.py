@@ -83,3 +83,6 @@ class DuckDBDatastore:
         LIMIT {limit}
         """
         return self.execute(query)
+    
+    def close(self):
+        self.connection.close()

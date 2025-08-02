@@ -28,6 +28,8 @@ class ProcessChatMessageCommand(ReadCommand):
             chat_model=current_app.config.get("CHAT_MODEL"),
             embedding_model=current_app.config.get("EMBEDDING_MODEL"),
         )
+        self.MAX_TURNS: int = int(current_app.config.get("MAX_TURNS"))
+        self.MAX_TOOL_CALLS_PER_TURN: int = int(current_app.config.get("MAX_TOOL_CALLS_PER_TURN"))
         self.toolkit = Toolkit()
         self.toolkit.add_tools(*[text_to_sql_tool])
 
@@ -50,59 +52,70 @@ class ProcessChatMessageCommand(ReadCommand):
 
         self.validate()
 
-        chat_kwargs = {
-            "messages": self.prepare_chat_messages(),
-            "tools": self.toolkit.tool_schemas(),
-        }
+        turn_count = 0
+        while turn_count < self.MAX_TURNS:
+            turn_count += 1
 
-        try:
-            response = self.llm_session.chat(**chat_kwargs)
-        except BadRequestError as e:
-            raise e
-        except Exception as e:
-            logger.error(f"Failed to fetch chat response: {e}")
-            raise ValidationException("Error in fetching chat response.")
+            chat_kwargs = {
+                "messages": self.prepare_chat_messages(),
+                "tools": self.toolkit.tool_schemas(),
+            }
 
-        tool_messages = []
+            try:
+                response = self.llm_session.chat(**chat_kwargs)
+            except BadRequestError as e:
+                raise e
+            except Exception as e:
+                logger.error(f"Failed to fetch chat response: {e}")
+                raise ValidationException("Error in fetching chat response.")
 
-        response_message_config = {
-            "role": "assistant",
-            "content": response.choices[0].message.content,
-            "finish_reason": response.choices[0].finish_reason,
-        }
+            tool_messages = []
 
-        if response.choices[0].finish_reason == "tool_calls":
-            tool_calls = response.choices[0].message.tool_calls
+            response_message_config = {
+                "role": "assistant",
+                "content": response.choices[0].message.content,
+                "finish_reason": response.choices[0].finish_reason,
+            }
 
-            response_message_config["tool_calls"] = [
-                {
-                    "id": tool_call.id,
-                    "type": "function",
-                    "function": {
-                        "name": tool_call.function.name,
-                        "arguments": tool_call.function.arguments,
-                    },
-                }
-                for tool_call in tool_calls
-            ]
+            if response.choices[0].finish_reason == "tool_calls":
+                tool_calls = response.choices[0].message.tool_calls
 
-            response_message = self.format_message(**response_message_config)
-
-            for tool_call in tool_calls:
-                tool_run = self.execute_tool_call(tool_call)
-                tool_messages.append(
-                    self.format_message(
-                        role="tool",
-                        tool_call_id=tool_call.id,
-                        content=json.dumps(tool_run),
+                if len(tool_calls) > self.MAX_TOOL_CALLS_PER_TURN:
+                    raise ValidationException(
+                        f"Too many tool calls requested: {len(tool_calls)} (max = {self.MAX_TOOL_CALLS_PER_TURN})"
                     )
-                )
-        else:
-            response_message = self.format_message(**response_message_config)
 
-        # Add the messages as the last elements of the list
-        self.chat_messages.append(response_message)
-        self.chat_messages.extend(tool_messages)
+                response_message_config["tool_calls"] = [
+                    {
+                        "id": tool_call.id,
+                        "type": "function",
+                        "function": {
+                            "name": tool_call.function.name,
+                            "arguments": tool_call.function.arguments,
+                        },
+                    }
+                    for tool_call in tool_calls
+                ]
+
+                response_message = self.format_message(**response_message_config)
+
+                for tool_call in tool_calls:
+                    tool_run = self.execute_tool_call(tool_call)
+                    tool_messages.append(
+                        self.format_message(
+                            role="tool",
+                            tool_call_id=tool_call.id,
+                            content=json.dumps(tool_run),
+                        )
+                    )
+                
+                self.chat_messages.append(response_message)
+                self.chat_messages.extend(tool_messages)
+            else:
+                response_message = self.format_message(**response_message_config)
+                self.chat_messages.append(response_message)
+                self.chat_messages.extend(tool_messages)
+                break
 
         return self.chat_messages
     
