@@ -28,4 +28,8 @@ def test(coverage, test_names):
     if test_results.wasSuccessful():
         exit(0)
 
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
     exit(1)
