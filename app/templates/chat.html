@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceGPT - Financial Data Analysis Chat</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .chat-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .chat-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2ecc71;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.assistant .message-avatar {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+        }
+
+        .message-content {
+            background: white;
+            padding: 15px 18px;
+            border-radius: 18px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.assistant .message-content {
+            background: white;
+            border: 1px solid #e9ecef;
+        }
+
+        .message-content::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            width: 0;
+            height: 0;
+            border: 8px solid transparent;
+        }
+
+        .message.user .message-content::before {
+            right: -16px;
+            border-left-color: #667eea;
+        }
+
+        .message.assistant .message-content::before {
+            left: -16px;
+            border-right-color: white;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 5px;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            max-width: 80%;
+            align-self: flex-start;
+        }
+
+        .typing-dots {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 18px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #bbb;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* Streaming cursor animation */
+        .streaming-cursor {
+            display: inline-block;
+            color: #3498db;
+            font-weight: bold;
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .streaming-content {
+            display: inline;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            max-width: 100%;
+        }
+
+        .chat-input {
+            flex: 1;
+            min-height: 50px;
+            max-height: 120px;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .send-button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .send-button:disabled {
+            background: #bbb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .suggestion-chip {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #bbdefb;
+        }
+
+        .suggestion-chip:hover {
+            background: #1976d2;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #c62828;
+            margin: 10px 0;
+        }
+
+        /* Markdown styling for assistant responses */
+        .message-content h1, .message-content h2, .message-content h3 {
+            margin: 15px 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .message-content h1 { font-size: 1.3rem; }
+        .message-content h2 { font-size: 1.2rem; }
+        .message-content h3 { font-size: 1.1rem; }
+
+        .message-content ul, .message-content ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .message-content li {
+            margin: 5px 0;
+        }
+
+        .message-content code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .message-content pre {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+            border-left: 4px solid #3498db;
+        }
+
+        /* Enhanced table styling */
+        .table-container {
+            overflow-x: auto;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-weight: 600;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #fdfdfd;
+        }
+        
+        /* Enhanced list styling */
+        .message-content ul {
+            margin: 15px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+        
+        .message-content ul li {
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .message-content ul li:before {
+            content: '•';
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: -8px;
+        }
+        
+        /* Legacy table support */
+        .message-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        .message-content th, .message-content td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .message-content th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .message-content strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        /* RAG References styling */
+        .message-content h2 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        /* Reference list styling */
+        .message-content h2 + p {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        /* Reference links */
+        .message-content a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .message-content a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        /* Streaming message styles */
+        .streaming-content {
+            display: inline;
+        }
+        
+        .streaming-cursor {
+            display: inline;
+            color: #3498db;
+            font-weight: bold;
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 95%;
+                height: 95vh;
+                border-radius: 10px;
+            }
+
+            .chat-header h1 {
+                font-size: 1.4rem;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .chat-input-wrapper {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .send-button {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>Online</span>
+            </div>
+            <h1>
+                <i class="fas fa-chart-line"></i>
+                FinanceGPT
+            </h1>
+            <p>Your AI-powered financial data analyst</p>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message assistant">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <strong>Welcome to FinanceGPT!</strong> 🎯
+                    <br><br>
+                    I'm your AI financial analyst, ready to help you explore and analyze your financial data. I can:
+                    <ul>
+                        <li>📊 <strong>Analyze trends</strong> and patterns in your data</li>
+                        <li>💰 <strong>Calculate financial metrics</strong> and ratios</li>
+                        <li>📈 <strong>Generate insights</strong> with contextual explanations</li>
+                        <li>🔍 <strong>Answer complex questions</strong> about your financial data</li>
+                    </ul>
+                    Try asking me something like "What's the total revenue for 2024?" or "Show me the top performing categories"
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="message-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <div class="suggestions" id="suggestions">
+                <div class="suggestion-chip" onclick="sendSuggestion('What tables are available in the database?')">
+                    📋 Show available data
+                </div>
+                <div class="suggestion-chip" onclick="sendSuggestion('What is the total revenue for 2024?')">
+                    💰 Total revenue 2024
+                </div>
+                <div class="suggestion-chip" onclick="sendSuggestion('Show me the trend over the last 6 months')">
+                    📈 6-month trends
+                </div>
+                <div class="suggestion-chip" onclick="sendSuggestion('What are the top 10 performers?')">
+                    🏆 Top performers
+                </div>
+            </div>
+            <div class="chat-input-wrapper">
+                <textarea 
+                    id="chatInput" 
+                    class="chat-input" 
+                    placeholder="Ask me anything about your financial data..."
+                    rows="1"
+                ></textarea>
+                <button id="sendButton" class="send-button" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat functionality
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const suggestions = document.getElementById('suggestions');
+        
+        // Conversation history for memory
+        let conversationHistory = [];
+
+        // Auto-resize textarea
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send message on Enter (but allow Shift+Enter for new lines)
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Send message function
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Hide suggestions after first message
+            if (suggestions.children.length > 0) {
+                suggestions.style.display = 'none';
+            }
+
+            // Add user message to conversation history
+            conversationHistory.push({ role: 'user', content: message });
+            
+            // Add user message to UI
+            addMessage('user', message);
+            
+            // Clear input and disable send button
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            sendButton.disabled = true;
+            
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                // Create a placeholder message for streaming
+                const messageId = 'msg-' + Date.now();
+                const messageDiv = addStreamingMessage('assistant', '', messageId);
+                
+                // Start streaming request
+                const response = await fetch('/v1/chat/stream', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        messages: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Hide typing indicator
+                hideTypingIndicator();
+                
+                // Use EventSource for better streaming support
+                let assistantMessage = '';
+                let streamingComplete = false;
+                
+                // Create a unique streaming URL with the message data
+                const streamUrl = '/v1/chat/stream';
+                
+                // Use fetch with manual streaming processing
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                
+                console.log('Starting streaming response processing...');
+                
+                const processStream = async () => {
+                    try {
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            
+                            if (done) {
+                                console.log('Stream reading complete');
+                                break;
+                            }
+                            
+                            buffer += decoder.decode(value, { stream: true });
+                            const lines = buffer.split('\n');
+                            
+                            // Keep the last incomplete line in buffer
+                            buffer = lines.pop() || '';
+                            
+                            for (const line of lines) {
+                                if (line.startsWith('data: ')) {
+                                    try {
+                                        const jsonStr = line.slice(6).trim();
+                                        if (jsonStr) {
+                                            const data = JSON.parse(jsonStr);
+                                            console.log('🔄 Received streaming data:', data);
+                                            
+                                            if (data.content !== undefined) {
+                                                // Implement character-by-character typing effect
+                                                await typewriterEffect(messageId, data.content, data.done);
+                                                
+                                                if (data.done) {
+                                                    assistantMessage = data.content;
+                                                    streamingComplete = true;
+                                                    console.log('✅ Streaming complete, final message:', assistantMessage);
+                                                    // Add to conversation history when complete
+                                                    conversationHistory.push({ role: 'assistant', content: assistantMessage });
+                                                    return;
+                                                } else {
+                                                    console.log(`⏳ Streaming progress: ${data.chunk_count || '?'}/${data.total_chunks || '?'} chunks`);
+                                                }
+                                            }
+                                        }
+                                    } catch (e) {
+                                        console.warn('❌ Failed to parse streaming data:', line, e);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error in stream processing:', error);
+                    }
+                };
+                
+                await processStream();
+                
+                if (!assistantMessage) {
+                    const errorMsg = 'I apologize, but I didn\'t receive a proper response. Please try your question again.';
+                    updateStreamingMessage(messageId, errorMsg);
+                    conversationHistory.push({ role: 'assistant', content: errorMsg });
+                }
+
+            } catch (error) {
+                console.error('Streaming error:', error);
+                hideTypingIndicator();
+                
+                // If streaming fails with 404, fallback to non-streaming endpoint
+                if (error.message.includes('404')) {
+                    console.log('Streaming endpoint not available, falling back to regular chat...');
+                    try {
+                        // Fallback to original chat endpoint
+                        const fallbackResponse = await fetch('/v1/threads/chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                messages: conversationHistory
+                            })
+                        });
+                        
+                        if (!fallbackResponse.ok) {
+                            throw new Error(`HTTP error! status: ${fallbackResponse.status}`);
+                        }
+                        
+                        const data = await fallbackResponse.json();
+                        
+                        // Handle regular response format
+                        if (data && data.payload && data.payload.length > 0) {
+                            let assistantMessage = null;
+                            
+                            for (let i = data.payload.length - 1; i >= 0; i--) {
+                                const msg = data.payload[i];
+                                if (msg.role === 'assistant' && msg.content) {
+                                    assistantMessage = msg.content;
+                                    break;
+                                }
+                                if (msg.role === 'tool' && msg.content) {
+                                    assistantMessage = msg.content;
+                                    break;
+                                }
+                            }
+                            
+                            if (assistantMessage) {
+                                if (typeof assistantMessage === 'string' && assistantMessage.startsWith('"') && assistantMessage.endsWith('"')) {
+                                    try {
+                                        assistantMessage = JSON.parse(assistantMessage);
+                                    } catch (e) {
+                                        assistantMessage = assistantMessage.slice(1, -1).replace(/\\n/g, '\n').replace(/\\"/g, '"');
+                                    }
+                                }
+                                conversationHistory.push({ role: 'assistant', content: assistantMessage });
+                                addMessage('assistant', assistantMessage);
+                            } else {
+                                const errorMsg = 'I processed your request but couldn\'t find the response content. Please try again.';
+                                conversationHistory.push({ role: 'assistant', content: errorMsg });
+                                addMessage('assistant', errorMsg);
+                            }
+                        } else {
+                            const errorMsg = 'I apologize, but I didn\'t receive a proper response. Please try your question again.';
+                            conversationHistory.push({ role: 'assistant', content: errorMsg });
+                            addMessage('assistant', errorMsg);
+                        }
+                        
+                    } catch (fallbackError) {
+                        console.error('Fallback error:', fallbackError);
+                        const errorMsg = `I encountered an error while processing your request: ${fallbackError.message}. Please check that the server is running and try again.`;
+                        conversationHistory.push({ role: 'assistant', content: errorMsg });
+                        addMessage('assistant', errorMsg);
+                    }
+                } else {
+                    const errorMsg = `I encountered an error while processing your request: ${error.message}. Please check that the server is running and try again.`;
+                    conversationHistory.push({ role: 'assistant', content: errorMsg });
+                    addMessage('assistant', errorMsg);
+                }
+            } finally {
+                // Re-enable send button
+                sendButton.disabled = false;
+            }
+        }
+
+        // Add message to chat
+        function addMessage(role, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}-message`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = role === 'user' ? '👤' : '🤖';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            
+            // Convert markdown-like formatting to HTML
+            const formattedContent = formatMessage(content);
+            messageContent.innerHTML = formattedContent + `<div class="message-time">${new Date().toLocaleTimeString()}</div>`;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Add streaming message placeholder
+        function addStreamingMessage(role, content, messageId) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}-message`;
+            messageDiv.id = messageId;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = role === 'user' ? '👤' : '🤖';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.innerHTML = `<div class="streaming-content">${content}</div><div class="streaming-cursor">▋</div><div class="message-time">${new Date().toLocaleTimeString()}</div>`;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageDiv;
+        }
+        
+        // Update streaming message content
+        function updateStreamingMessage(messageId, content, isDone = false) {
+            const messageDiv = document.getElementById(messageId);
+            if (messageDiv) {
+                const streamingContent = messageDiv.querySelector('.streaming-content');
+                const cursor = messageDiv.querySelector('.streaming-cursor');
+                
+                if (streamingContent) {
+                    // Format the content and update
+                    const formattedContent = formatMessage(content);
+                    streamingContent.innerHTML = formattedContent;
+                    
+                    // Hide cursor when streaming is complete
+                    if (isDone && cursor) {
+                        cursor.style.display = 'none';
+                    }
+                    
+                    // Auto-scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+        }
+
+        // Typewriter effect for character-by-character streaming
+        let currentDisplayedContent = '';
+        let typewriterTimeout = null;
+        
+        async function typewriterEffect(messageId, newContent, isDone) {
+            // Clear any existing typewriter timeout
+            if (typewriterTimeout) {
+                clearTimeout(typewriterTimeout);
+            }
+            
+            // If this is the same content we're already displaying, skip
+            if (newContent === currentDisplayedContent) {
+                return;
+            }
+            
+            // Find the new characters to type
+            const startIndex = currentDisplayedContent.length;
+            const newChars = newContent.slice(startIndex);
+            
+            // Type each new character with delay
+            for (let i = 0; i < newChars.length; i++) {
+                currentDisplayedContent += newChars[i];
+                
+                // Update the display with current progress
+                updateStreamingMessage(messageId, currentDisplayedContent, false);
+                
+                // Faster typing speed for quicker response
+                let delay = 8; // Base typing speed (8ms per character - much faster)
+                
+                const char = newChars[i];
+                if (char === ' ') {
+                    delay = 20; // Quick pause between words
+                } else if (char.match(/[.!?]/)) {
+                    delay = 50; // Shorter pause after sentences
+                } else if (char.match(/[,;:]/)) {
+                    delay = 30; // Quick pause after clauses
+                } else if (char === '\n') {
+                    delay = 35; // Quick pause at line breaks
+                } else if (char.match(/[|]/)) {
+                    delay = 12; // Fast for table separators
+                }
+                
+                // Wait before typing next character
+                await new Promise(resolve => {
+                    typewriterTimeout = setTimeout(resolve, delay);
+                });
+            }
+            
+            // Final update when done
+            if (isDone) {
+                updateStreamingMessage(messageId, newContent, true);
+                currentDisplayedContent = ''; // Reset for next message
+            }
+        }
+
+        // Format message content (enhanced markdown support)
+        function formatMessage(content) {
+            // First, handle code blocks to prevent interference
+            content = content.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            
+            // Handle tables
+            content = formatTables(content);
+            
+            // Handle headers (do this before line breaks)
+            content = content
+                .replace(/^#{3}\s(.*)$/gm, '<h3>$1</h3>')
+                .replace(/^#{2}\s(.*)$/gm, '<h2>$1</h2>')
+                .replace(/^#{1}\s(.*)$/gm, '<h1>$1</h1>');
+            
+            // Handle lists
+            content = formatLists(content);
+            
+            // Handle inline formatting
+            content = content
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>');
+            
+            // Better line break handling for streaming
+            // Convert ### headers to have proper spacing
+            content = content.replace(/### /g, '<br><br><strong>');
+            content = content.replace(/: /g, ':</strong> ');
+            
+            // Handle numbered lists with proper spacing
+            content = content.replace(/(\d+\. )/g, '<br><br>$1');
+            
+            // Handle bullet points with proper spacing
+            content = content.replace(/- /g, '<br>• ');
+            
+            // Convert remaining line breaks to HTML with proper spacing
+            content = content.replace(/\n\n/g, '<br><br>');
+            content = content.replace(/\n/g, '<br>');
+            
+            // Clean up any double spacing at the beginning
+            content = content.replace(/^(<br>)+/, '');
+            
+            return content;
+        }
+        
+        // Enhanced table formatting
+        function formatTables(content) {
+            // Match markdown tables
+            const tableRegex = /\|(.+)\|\n\|([:\-\|\s]+)\|\n((\|.+\|\n?)+)/g;
+            
+            return content.replace(tableRegex, (match, header, separator, rows) => {
+                const headerCells = header.split('|').map(cell => cell.trim()).filter(cell => cell);
+                const rowLines = rows.trim().split('\n');
+                
+                let tableHtml = '<div class="table-container"><table class="data-table">';
+                
+                // Add header
+                tableHtml += '<thead><tr>';
+                headerCells.forEach(cell => {
+                    tableHtml += `<th>${cell}</th>`;
+                });
+                tableHtml += '</tr></thead>';
+                
+                // Add rows
+                tableHtml += '<tbody>';
+                rowLines.forEach(row => {
+                    if (row.trim()) {
+                        const cells = row.split('|').map(cell => cell.trim()).filter(cell => cell);
+                        tableHtml += '<tr>';
+                        cells.forEach(cell => {
+                            tableHtml += `<td>${cell}</td>`;
+                        });
+                        tableHtml += '</tr>';
+                    }
+                });
+                tableHtml += '</tbody></table></div>';
+                
+                return tableHtml;
+            });
+        }
+        
+        // Enhanced list formatting
+        function formatLists(content) {
+            // Handle bullet lists
+            content = content.replace(/^[\s]*[\u2022\*\-]\s(.+)$/gm, '<li>$1</li>');
+            content = content.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            
+            // Handle numbered lists
+            content = content.replace(/^[\s]*\d+\.\s(.+)$/gm, '<li>$1</li>');
+            
+            return content;
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'flex';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Hide typing indicator
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        // Send suggestion
+        function sendSuggestion(text) {
+            chatInput.value = text;
+            sendMessage();
+        }
+
+        // Focus input on load
+        window.addEventListener('load', () => {
+            chatInput.focus();
+        });
+    </script>
+</body>
+</html>

@@ -8,9 +8,12 @@ from app.services.llm.prompts.chat_prompt import chat_prompt
 from app.services.llm.session import LLMSession
 from app.services.llm.structured_outputs import text_to_sql
 from app.services.llm.tools.text_to_sql import text_to_sql as text_to_sql_tool
+from app.services.llm.tools.database_schema import get_database_schema, suggest_sql_queries
+from app.services.llm.tools.rag_enhanced_query import rag_enhanced_financial_query
+from app.services.llm.response_quality.evaluator import ResponseQualityEvaluator
 from app.utils.formatters import get_timestamp
 
-from langfuse.decorators import observe
+from app.utils.langfuse_compat import observe
 from openai import BadRequestError
 from vaul import Toolkit
 from uuid import uuid4
@@ -29,7 +32,15 @@ class ProcessChatMessageCommand(ReadCommand):
             embedding_model=current_app.config.get("EMBEDDING_MODEL"),
         )
         self.toolkit = Toolkit()
-        self.toolkit.add_tools(*[text_to_sql_tool])
+        self.toolkit.add_tools(*[
+            text_to_sql_tool, 
+            get_database_schema, 
+            suggest_sql_queries,
+            rag_enhanced_financial_query
+        ])
+        
+        # Initialize response quality evaluator
+        self.quality_evaluator = ResponseQualityEvaluator()
 
     def validate(self) -> None:
         """
@@ -104,10 +115,42 @@ class ProcessChatMessageCommand(ReadCommand):
         self.chat_messages.append(response_message)
         self.chat_messages.extend(tool_messages)
 
+        # If tools were called, make a second LLM call to synthesize the results
+        if response.choices[0].finish_reason == "tool_calls":
+            logger.debug(f"Making second LLM call to synthesize {len(tool_messages)} tool results")
+            
+            synthesis_kwargs = {
+                "messages": self.prepare_chat_messages(),
+                "tools": self.toolkit.tool_schemas(),
+            }
+            
+            try:
+                synthesis_response = self.llm_session.chat(**synthesis_kwargs)
+                
+                # Add the synthesis response
+                synthesis_message = self.format_message(
+                    role="assistant",
+                    content=synthesis_response.choices[0].message.content,
+                    finish_reason=synthesis_response.choices[0].finish_reason,
+                )
+                
+                self.chat_messages.append(synthesis_message)
+                logger.debug("Successfully synthesized tool results into final response")
+                
+            except Exception as e:
+                logger.error(f"Failed to synthesize tool results: {e}")
+                # Add fallback response
+                fallback_message = self.format_message(
+                    role="assistant",
+                    content="I processed your request using multiple tools but encountered an issue synthesizing the results. Please try again.",
+                    finish_reason="stop",
+                )
+                self.chat_messages.append(fallback_message)
+
         return self.chat_messages
     
 
-    @observe()
+    @observe
     def prepare_chat_messages(self) -> list:
         trimmed_messages = self.llm_session.trim_message_history(
             messages=self.chat_messages,
@@ -119,7 +162,7 @@ class ProcessChatMessageCommand(ReadCommand):
 
         return trimmed_messages
 
-    @observe()
+    @observe
     def format_message(self, role: str, content: str, **kwargs) -> dict:
         return {
             "id": str(uuid4()),
@@ -129,7 +172,7 @@ class ProcessChatMessageCommand(ReadCommand):
             **kwargs,
         }
 
-    @observe()
+    @observe
     def execute_tool_call(self, tool_call: dict) -> dict:
         return self.toolkit.run_tool(
             name=tool_call.function.name,

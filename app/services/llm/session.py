@@ -3,7 +3,7 @@ from flask import current_app
 
 from app import logger
 
-from langfuse.decorators import langfuse_context
+from app.utils.langfuse_compat import langfuse_context
 from litellm import completion, embedding
 from vaul import StructuredOutput
 
