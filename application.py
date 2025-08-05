@@ -29,3 +29,7 @@ def test(coverage, test_names):
         exit(0)
 
     exit(1)
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
