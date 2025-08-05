@@ -4,6 +4,7 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from app.middlewares.auth_middleware import get_current_user
 from app.middlewares.logger_middleware import log_request_info, log_response_info
 from app.routes.thread_routes import thread_routes
+from app.routes.chat_routes import chat_routes
 
 from app.utils.messages import Error
 from app.utils.response import Response
@@ -16,6 +17,7 @@ def stop(env, resp):
 
 blueprints = {
     '/threads': thread_routes,
+    '/chat': chat_routes,
 }
 
 
@@ -31,6 +33,12 @@ def init_routes(app):
 
     @app.get("/")
     def index():
+        # Redirect to chat interface for better user experience
+        from flask import redirect
+        return redirect('/v1/chat/')
+    
+    @app.get("/api")
+    def api_info():
         return Response({'api_version': 'v1.0', 'api_description': 'TextLayer Core API'},
                         Response.HTTP_SUCCESS).build()
 
