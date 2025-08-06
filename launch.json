@@ -1,0 +1,63 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Flask App with Doppler",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/debug_flask.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}",
+            "python": "${workspaceFolder}/.venv/bin/python"
+        },
+        {
+            "name": "Debug Streamlit App",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "streamlit",
+            "args": [
+                "run",
+                "${workspaceFolder}/streamlit_app.py",
+                "--server.port=8501",
+                "--server.headless=false"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}",
+            "python": "${workspaceFolder}/.venv/bin/python"
+        },
+        {
+            "name": "Debug Flask with Doppler CLI",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.venv/bin/python",
+            "args": [
+                "-c",
+                "import subprocess; subprocess.run(['doppler', 'run', '--', 'python', '-m', 'flask', '--app', 'application', 'run', '--host=0.0.0.0', '--port=5001', '--debug'])"
+            ],
+            "env": {
+                "DOPPLER_TOKEN": "dp.st.prd.ZSiWlMjSmwiSLkGWu5fwJOYstT9x1EgqVSMy8mIEYA6"
+            },
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}",
+            "python": "${workspaceFolder}/.venv/bin/python"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug Full Stack (Flask + Streamlit)",
+            "configurations": [
+                "Debug Flask App with Doppler",
+                "Debug Streamlit App"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "fullstack",
+                "order": 1
+            }
+        }
+    ]
+}

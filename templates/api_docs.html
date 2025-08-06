@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextLayer Financial Chat API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .endpoint {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #667eea;
+        }
+        
+        .method {
+            display: inline-block;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 1rem;
+        }
+        
+        .get { background: #28a745; }
+        .post { background: #007bff; }
+        
+        .endpoint-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .url {
+            color: #6c757d;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 1.1rem;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+        
+        .json-key { color: #9ae6b4; }
+        .json-string { color: #f6ad55; }
+        .json-number { color: #63b3ed; }
+        
+        .description {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .example-queries {
+            background: #e8f5e8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .example-queries h4 {
+            color: #155724;
+            margin-bottom: 1rem;
+        }
+        
+        .example-queries ul {
+            list-style: none;
+        }
+        
+        .example-queries li {
+            background: white;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            border-left: 3px solid #28a745;
+        }
+        
+        .test-button {
+            background: #28a745;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .test-button:hover {
+            background: #218838;
+        }
+        
+        .schema-section {
+            background: #fff3cd;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        
+        .schema-section h3 {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+        
+        .postman-section {
+            background: #d1ecf1;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        
+        .postman-section h3 {
+            color: #0c5460;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TextLayer Financial Chat API</h1>
+            <p class="subtitle">A sophisticated text-to-SQL interface for enterprise financial data analysis</p>
+        </header>
+
+        <div class="endpoint">
+            <div class="endpoint-title">
+                <span class="method get">GET</span>
+                <span class="url">/v1/health</span>
+            </div>
+            <p class="description">Check if the API is online and responding. Use this for health checks and monitoring.</p>
+            
+            <h4>Response Example:</h4>
+            <pre>{
+  <span class="json-key">"correlation_id"</span>: <span class="json-string">"8401748f-bd45-4862-8d66-28ce0fcc42d1"</span>,
+  <span class="json-key">"payload"</span>: {
+    <span class="json-key">"status"</span>: <span class="json-string">"online"</span>
+  },
+  <span class="json-key">"status"</span>: <span class="json-number">200</span>
+}</pre>
+            
+            <a href="http://localhost:8080/v1/health" class="test-button" target="_blank">Test This Endpoint</a>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-title">
+                <span class="method post">POST</span>
+                <span class="url">/v1/threads/chat</span>
+            </div>
+            <p class="description">Send natural language queries about financial data and receive AI-generated responses with SQL queries and results.</p>
+            
+            <h4>Request Body:</h4>
+            <pre>{
+  <span class="json-key">"messages"</span>: [
+    {
+      <span class="json-key">"role"</span>: <span class="json-string">"user"</span>,
+      <span class="json-key">"content"</span>: <span class="json-string">"What is the total revenue for all customers in 2018?"</span>
+    }
+  ]
+}</pre>
+
+            <div class="example-queries">
+                <h4>💡 Example Financial Queries You Can Ask:</h4>
+                <ul>
+                    <li><strong>Revenue Analysis:</strong> "What is the total revenue for all customers in 2018?"</li>
+                    <li><strong>Regional Breakdown:</strong> "Show me revenue by customer region, ordered from highest to lowest"</li>
+                    <li><strong>Time Trends:</strong> "What are the monthly revenue trends in 2018? Show me total revenue by month."</li>
+                    <li><strong>Budget vs Actual:</strong> "Compare actual vs budget revenue for all accounts. Show the variance."</li>
+                    <li><strong>Product Analysis:</strong> "Which product categories generate the most revenue? Show top 5."</li>
+                    <li><strong>Quarterly Analysis:</strong> "Show me gross margin by quarter for 2018"</li>
+                    <li><strong>Account Details:</strong> "What are the different types of revenue accounts and their totals?"</li>
+                </ul>
+            </div>
+
+            <h4>Response Example:</h4>
+            <pre>{
+  <span class="json-key">"correlation_id"</span>: <span class="json-string">"cf5488d3-123b-4c57-96ef-6a42d318df2b"</span>,
+  <span class="json-key">"payload"</span>: [
+    {
+      <span class="json-key">"role"</span>: <span class="json-string">"user"</span>,
+      <span class="json-key">"content"</span>: <span class="json-string">"What is the total revenue for all customers in 2018?"</span>
+    },
+    {
+      <span class="json-key">"role"</span>: <span class="json-string">"assistant"</span>,
+      <span class="json-key">"finish_reason"</span>: <span class="json-string">"tool_calls"</span>,
+      <span class="json-key">"tool_calls"</span>: [...]
+    },
+    {
+      <span class="json-key">"role"</span>: <span class="json-string">"tool"</span>,
+      <span class="json-key">"content"</span>: <span class="json-string">"**Generated SQL**: SELECT SUM(amount)... **Results**: |Total Revenue| |50365345.98|"</span>
+    }
+  ],
+  <span class="json-key">"status"</span>: <span class="json-number">200</span>
+}</pre>
+        </div>
+
+        <div class="schema-section">
+            <h3>🗄️ Database Schema</h3>
+            <p>The financial database contains the following tables:</p>
+            <ul>
+                <li><strong>financial_data</strong>: Main fact table with financial metrics and amounts</li>
+                <li><strong>account</strong>: Chart of accounts (Revenue: 400, 4000, 4010, 4020; Expenses, Assets, etc.)</li>
+                <li><strong>customer</strong>: Customer dimension (West, Midwest, Southeast, Southwest regions)</li>
+                <li><strong>product</strong>: Product dimension (Product lines, categories)</li>
+                <li><strong>time</strong>: Time dimension (2018M01, 2018M02, etc. format)</li>
+                <li><strong>version</strong>: Version dimension (ACT=Actual, BUD=Budget, FC1=Forecast)</li>
+                <li><strong>time_perspective</strong>: Time perspective (BASE, YTD calculations)</li>
+            </ul>
+        </div>
+
+        <div class="postman-section">
+            <h3>📮 Testing with Postman</h3>
+            <p><strong>For the Chat Endpoint:</strong></p>
+            <ol>
+                <li>Set method to <strong>POST</strong></li>
+                <li>URL: <code>http://localhost:8080/v1/threads/chat</code></li>
+                <li>Headers: <code>Content-Type: application/json</code></li>
+                <li>Body (raw JSON): Use the request example above</li>
+                <li>Click Send!</li>
+            </ol>
+            
+            <p><strong>For the Health Endpoint:</strong></p>
+            <ol>
+                <li>Set method to <strong>GET</strong></li>
+                <li>URL: <code>http://localhost:8080/v1/health</code></li>
+                <li>Headers: <code>Content-Type: application/json</code></li>
+                <li>Click Send!</li>
+            </ol>
+        </div>
+
+        <div style="background: white; padding: 2rem; border-radius: 10px; margin-top: 2rem; text-align: center;">
+            <h3>🚀 Ready to Get Started?</h3>
+            <p>The API is running on <strong>http://localhost:8080</strong></p>
+            <p>Try the health endpoint first, then experiment with financial queries!</p>
+        </div>
+    </div>
+</body>
+</html>
