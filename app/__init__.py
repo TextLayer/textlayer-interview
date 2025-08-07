@@ -28,10 +28,28 @@ def silence_warnings(config_name):
         warnings.simplefilter("ignore")
 
 
-def create_app(config_name):
+def create_app(config_name=None):
+    """
+    Create and configure the Flask application.
+    
+    This factory function creates a Flask application instance with all necessary
+    configurations, routes, extensions, and CLI commands.
+    
+    Args:
+        config_name (str, optional): Configuration environment name.
+                                   Defaults to FLASK_CONFIG env var or 'DEV'.
+    
+    Returns:
+        Flask: Configured Flask application instance
+    """
     from app.routes import routes
+    from app.cli.test_commands import init_test_commands
 
     app = Flask(__name__)
+
+    # Determine configuration
+    if config_name is None:
+        config_name = os.environ.get('FLASK_CONFIG', 'DEV')
 
     # Initialize configuration
     app.config.from_object(config[config_name])
@@ -45,5 +63,8 @@ def create_app(config_name):
     cors.init_app(app)
     ma.init_app(app)
     mail.init_app(app)
+    
+    # Initialize CLI commands
+    init_test_commands(app)
 
     return app

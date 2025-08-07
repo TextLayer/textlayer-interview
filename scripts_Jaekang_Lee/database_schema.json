@@ -1,0 +1,684 @@
+{
+  "database_type": "DuckDB",
+  "description": "Financial business intelligence database with hierarchical account, customer, and product structures",
+  "tables": {
+    "account": {
+      "columns": [
+        {
+          "name": "Key",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Unique identifier/primary key"
+        },
+        {
+          "name": "ParentId",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Reference to parent in hierarchy"
+        },
+        {
+          "name": "Name",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Human-readable name/description"
+        },
+        {
+          "name": "UNARY_OPERATOR",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Mathematical operator for calculations"
+        },
+        {
+          "name": "AccountType",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Type classification for accounts"
+        },
+        {
+          "name": "CalculationMethod",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Method used for financial calculations"
+        },
+        {
+          "name": "DebitCredit",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Debit (0) or Credit (1) indicator"
+        },
+        {
+          "name": "LineItemRequired",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in account"
+        },
+        {
+          "name": "NonLeafInput",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in account"
+        },
+        {
+          "name": "NumericFormat",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in account"
+        },
+        {
+          "name": "PreventDataEntry",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in account"
+        },
+        {
+          "name": "TCMethod",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in account"
+        },
+        {
+          "name": "TCFormulaMDX",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in account"
+        },
+        {
+          "name": "ProceduralCalc",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in account"
+        },
+        {
+          "name": "CurrencyConversionMethod",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in account"
+        }
+      ],
+      "row_count_sample": 3,
+      "sample_data": [
+        {
+          "Key": "40",
+          "ParentId": "",
+          "Name": "Gross Margin",
+          "UNARY_OPERATOR": "~",
+          "AccountType": "1",
+          "CalculationMethod": "",
+          "DebitCredit": "1",
+          "LineItemRequired": "",
+          "NonLeafInput": "",
+          "NumericFormat": "#,###",
+          "PreventDataEntry": "",
+          "TCMethod": "0",
+          "TCFormulaMDX": "",
+          "ProceduralCalc": "",
+          "CurrencyConversionMethod": ""
+        },
+        {
+          "Key": "400",
+          "ParentId": "40",
+          "Name": "Gross Revenue",
+          "UNARY_OPERATOR": "+",
+          "AccountType": "1",
+          "CalculationMethod": "",
+          "DebitCredit": "1",
+          "LineItemRequired": "",
+          "NonLeafInput": "",
+          "NumericFormat": "#,###",
+          "PreventDataEntry": "",
+          "TCMethod": "0",
+          "TCFormulaMDX": "",
+          "ProceduralCalc": "",
+          "CurrencyConversionMethod": ""
+        },
+        {
+          "Key": "4000",
+          "ParentId": "400",
+          "Name": "Product Revenue",
+          "UNARY_OPERATOR": "+",
+          "AccountType": "1",
+          "CalculationMethod": "",
+          "DebitCredit": "1",
+          "LineItemRequired": "",
+          "NonLeafInput": "",
+          "NumericFormat": "#,###",
+          "PreventDataEntry": "",
+          "TCMethod": "0",
+          "TCFormulaMDX": "1",
+          "ProceduralCalc": "",
+          "CurrencyConversionMethod": ""
+        }
+      ],
+      "business_purpose": "Financial account hierarchy including revenue, costs, and calculated metrics"
+    },
+    "customer": {
+      "columns": [
+        {
+          "name": "Key",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Unique identifier/primary key"
+        },
+        {
+          "name": "ParentId",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Reference to parent in hierarchy"
+        },
+        {
+          "name": "Name",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Human-readable name/description"
+        },
+        {
+          "name": "Channel",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Sales or distribution channel"
+        },
+        {
+          "name": "Channel Parent",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in customer"
+        },
+        {
+          "name": "Customer Since",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in customer"
+        },
+        {
+          "name": "Industry",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in customer"
+        },
+        {
+          "name": "Location",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Geographic location"
+        },
+        {
+          "name": "Sales Manager",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in customer"
+        },
+        {
+          "name": "Salesperson",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in customer"
+        }
+      ],
+      "row_count_sample": 3,
+      "sample_data": [
+        {
+          "Key": "C0000",
+          "ParentId": "",
+          "Name": "Total Region",
+          "Channel": "",
+          "Channel Parent": "",
+          "Customer Since": "",
+          "Industry": "",
+          "Location": "",
+          "Sales Manager": "",
+          "Salesperson": ""
+        },
+        {
+          "Key": "C1000",
+          "ParentId": "C0000",
+          "Name": "West",
+          "Channel": "",
+          "Channel Parent": "",
+          "Customer Since": "",
+          "Industry": "",
+          "Location": "",
+          "Sales Manager": "",
+          "Salesperson": ""
+        },
+        {
+          "Key": "C2000",
+          "ParentId": "C0000",
+          "Name": "Midwest",
+          "Channel": "",
+          "Channel Parent": "",
+          "Customer Since": "",
+          "Industry": "",
+          "Location": "",
+          "Sales Manager": "",
+          "Salesperson": ""
+        }
+      ],
+      "business_purpose": "Customer and geographic region hierarchy"
+    },
+    "other": {
+      "columns": [
+        {
+          "name": "Key",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Unique identifier/primary key"
+        },
+        {
+          "name": "ParentId",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Reference to parent in hierarchy"
+        },
+        {
+          "name": "Name",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Human-readable name/description"
+        }
+      ],
+      "row_count_sample": 3,
+      "sample_data": [
+        {
+          "Key": "NO",
+          "ParentId": "",
+          "Name": "No Other"
+        },
+        {
+          "Key": "TP",
+          "ParentId": "",
+          "Name": "Total Platform"
+        },
+        {
+          "Key": "TV",
+          "ParentId": "",
+          "Name": "Total Revenue"
+        }
+      ],
+      "business_purpose": "Additional financial metrics and calculated fields"
+    },
+    "product": {
+      "columns": [
+        {
+          "name": "Key",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Unique identifier/primary key"
+        },
+        {
+          "name": "ParentId",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Reference to parent in hierarchy"
+        },
+        {
+          "name": "Name",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Human-readable name/description"
+        },
+        {
+          "name": "Product Line",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Product categorization"
+        }
+      ],
+      "row_count_sample": 3,
+      "sample_data": [
+        {
+          "Key": "P0000",
+          "ParentId": "",
+          "Name": "Total Products",
+          "Product Line": ""
+        },
+        {
+          "Key": "P1000",
+          "ParentId": "P0000",
+          "Name": "Product Line A",
+          "Product Line": ""
+        },
+        {
+          "Key": "P10001",
+          "ParentId": "P1000",
+          "Name": "Category 1",
+          "Product Line": ""
+        }
+      ],
+      "business_purpose": "Product categorization and line hierarchy"
+    },
+    "time": {
+      "columns": [
+        {
+          "name": "Name",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Human-readable name/description"
+        },
+        {
+          "name": "Month",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        },
+        {
+          "name": "StartPeriod",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        },
+        {
+          "name": "EndPeriod",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        },
+        {
+          "name": "Year",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        },
+        {
+          "name": "Quarter",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        },
+        {
+          "name": "FiscalQuarterNumber",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        },
+        {
+          "name": "FiscalMonthNumber",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        },
+        {
+          "name": "MonthAbbreviation",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        },
+        {
+          "name": "FiscalMonthAbbreviationWithYear",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        },
+        {
+          "name": "MonthWithYear",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time"
+        }
+      ],
+      "row_count_sample": 3,
+      "sample_data": [
+        {
+          "Name": "January",
+          "Month": "2018M01",
+          "StartPeriod": "2018-01-01",
+          "EndPeriod": "2018-01-31",
+          "Year": "2018",
+          "Quarter": "2018Q1",
+          "FiscalQuarterNumber": "1",
+          "FiscalMonthNumber": "1",
+          "MonthAbbreviation": "Jan",
+          "FiscalMonthAbbreviationWithYear": "Jan2018",
+          "MonthWithYear": "January2018"
+        },
+        {
+          "Name": "February",
+          "Month": "2018M02",
+          "StartPeriod": "2018-02-01",
+          "EndPeriod": "2018-02-28",
+          "Year": "2018",
+          "Quarter": "2018Q1",
+          "FiscalQuarterNumber": "1",
+          "FiscalMonthNumber": "2",
+          "MonthAbbreviation": "Feb",
+          "FiscalMonthAbbreviationWithYear": "Feb2018",
+          "MonthWithYear": "February2018"
+        },
+        {
+          "Name": "March",
+          "Month": "2018M03",
+          "StartPeriod": "2018-03-01",
+          "EndPeriod": "2018-03-31",
+          "Year": "2018",
+          "Quarter": "2018Q1",
+          "FiscalQuarterNumber": "1",
+          "FiscalMonthNumber": "3",
+          "MonthAbbreviation": "Mar",
+          "FiscalMonthAbbreviationWithYear": "Mar2018",
+          "MonthWithYear": "March2018"
+        }
+      ],
+      "business_purpose": "Time dimension for financial reporting"
+    },
+    "time_perspective": {
+      "columns": [
+        {
+          "name": "Key",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Unique identifier/primary key"
+        },
+        {
+          "name": "ParentId",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Reference to parent in hierarchy"
+        },
+        {
+          "name": "Name",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Human-readable name/description"
+        },
+        {
+          "name": "CalculationMethod",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Method used for financial calculations"
+        },
+        {
+          "name": "MemberType",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in time_perspective"
+        }
+      ],
+      "row_count_sample": 2,
+      "sample_data": [
+        {
+          "Key": "BASE",
+          "ParentId": "",
+          "Name": "Base",
+          "CalculationMethod": "Input",
+          "MemberType": "0"
+        },
+        {
+          "Key": "YTD",
+          "ParentId": "",
+          "Name": "Year",
+          "CalculationMethod": "YTD",
+          "MemberType": "1"
+        }
+      ],
+      "business_purpose": "Time-based analysis perspectives"
+    },
+    "version": {
+      "columns": [
+        {
+          "name": "Key",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Unique identifier/primary key"
+        },
+        {
+          "name": "ParentId",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Reference to parent in hierarchy"
+        },
+        {
+          "name": "Name",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Human-readable name/description"
+        },
+        {
+          "name": "VersionType",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in version"
+        },
+        {
+          "name": "Status",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in version"
+        },
+        {
+          "name": "RuleSet",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in version"
+        },
+        {
+          "name": "StartPeriod",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in version"
+        },
+        {
+          "name": "EndPeriod",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in version"
+        },
+        {
+          "name": "CarryForward",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in version"
+        },
+        {
+          "name": "CalculationMethod",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Method used for financial calculations"
+        },
+        {
+          "name": "ReferenceVersion",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in version"
+        },
+        {
+          "name": "TimeLevel",
+          "type": "VARCHAR",
+          "nullable": true,
+          "description": "Data field in version"
+        }
+      ],
+      "row_count_sample": 3,
+      "sample_data": [
+        {
+          "Key": "1",
+          "ParentId": "",
+          "Name": "Actual Versions",
+          "VersionType": "0",
+          "Status": "",
+          "RuleSet": "",
+          "StartPeriod": "",
+          "EndPeriod": "",
+          "CarryForward": "",
+          "CalculationMethod": "",
+          "ReferenceVersion": "",
+          "TimeLevel": ""
+        },
+        {
+          "Key": "2",
+          "ParentId": "",
+          "Name": "Budget Versions",
+          "VersionType": "0",
+          "Status": "",
+          "RuleSet": "",
+          "StartPeriod": "",
+          "EndPeriod": "",
+          "CarryForward": "",
+          "CalculationMethod": "",
+          "ReferenceVersion": "",
+          "TimeLevel": ""
+        },
+        {
+          "Key": "3",
+          "ParentId": "",
+          "Name": "Forecast Versions",
+          "VersionType": "0",
+          "Status": "",
+          "RuleSet": "",
+          "StartPeriod": "",
+          "EndPeriod": "",
+          "CarryForward": "",
+          "CalculationMethod": "",
+          "ReferenceVersion": "",
+          "TimeLevel": ""
+        }
+      ],
+      "business_purpose": "Data versioning for financial scenarios"
+    }
+  },
+  "relationships": {
+    "account": {
+      "type": "hierarchical",
+      "primary_key": "Key",
+      "parent_key": "ParentId",
+      "description": "Self-referencing hierarchy in account"
+    },
+    "customer": {
+      "type": "hierarchical",
+      "primary_key": "Key",
+      "parent_key": "ParentId",
+      "description": "Self-referencing hierarchy in customer"
+    },
+    "other": {
+      "type": "hierarchical",
+      "primary_key": "Key",
+      "parent_key": "ParentId",
+      "description": "Self-referencing hierarchy in other"
+    },
+    "product": {
+      "type": "hierarchical",
+      "primary_key": "Key",
+      "parent_key": "ParentId",
+      "description": "Self-referencing hierarchy in product"
+    },
+    "time_perspective": {
+      "type": "hierarchical",
+      "primary_key": "Key",
+      "parent_key": "ParentId",
+      "description": "Self-referencing hierarchy in time_perspective"
+    },
+    "version": {
+      "type": "hierarchical",
+      "primary_key": "Key",
+      "parent_key": "ParentId",
+      "description": "Self-referencing hierarchy in version"
+    }
+  },
+  "business_context": {
+    "domain": "Financial Analytics",
+    "key_concepts": [
+      "Account hierarchy (revenue, costs, margins)",
+      "Customer geographic regions",
+      "Product line categorization",
+      "Time-based financial tracking"
+    ]
+  }
+}

@@ -59,7 +59,7 @@ You can also run the application in a Docker container:
 docker build -t textlayer-interview .
 
 # Run the container
-docker run -p 5000:5000 textlayer-interview
+docker run -p 5000:5000 --env-file .env textlayer-interview
 
 # If you need to mount a local directory and pass environment variables
 docker run -p 5000:5000 \
