@@ -10,17 +10,17 @@ from app.utils.response import Response
 
 
 def stop(env, resp):
-    resp('200 OK', [('Content-Type', 'text/plain')])
-    return [b'TextLayer Core API. Basepath /v1/']
+    resp("200 OK", [("Content-Type", "text/plain")])
+    return [b"TextLayer Core API. Basepath /v1/"]
 
 
 blueprints = {
-    '/threads': thread_routes,
+    "/threads": thread_routes,
 }
 
 
 def init_routes(app):
-    app.wsgi_app = DispatcherMiddleware(stop, {'/v1': app.wsgi_app})
+    app.wsgi_app = DispatcherMiddleware(stop, {"/v1": app.wsgi_app})
 
     app.before_request(get_current_user)
     app.before_request(log_request_info)
@@ -31,12 +31,14 @@ def init_routes(app):
 
     @app.get("/")
     def index():
-        return Response({'api_version': 'v1.0', 'api_description': 'TextLayer Core API'},
-                        Response.HTTP_SUCCESS).build()
+        return Response(
+            {"api_version": "v1.0", "api_description": "TextLayer Core API"},
+            Response.HTTP_SUCCESS,
+        ).build()
 
     @app.get("/health")
     def health():
-        return Response({'status': 'online'}, Response.HTTP_SUCCESS).build()
+        return Response({"status": "online"}, Response.HTTP_SUCCESS).build()
 
     @app.errorhandler(404)
     def not_found_error(error):

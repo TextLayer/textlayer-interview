@@ -24,7 +24,7 @@ def get_current_user():
     bearer_token = lowercase_headers.get("authorization")
     if bearer_token:
         parts = bearer_token.split()
-        if len(parts) == 2 and parts[0].lower() == 'bearer':
+        if len(parts) == 2 and parts[0].lower() == "bearer":
             token = parts[1]
 
     # Use either the API key or the bearer token

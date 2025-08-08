@@ -10,7 +10,7 @@ def sample_handler(event, context):
     try:
         event_body = json.loads(event["Records"][0]["body"])
     except (KeyError, json.JSONDecodeError) as e:
-        logger.error(f'Error parsing event: {e}')
+        logger.error(f"Error parsing event: {e}")
         return False
 
     with app.app_context():

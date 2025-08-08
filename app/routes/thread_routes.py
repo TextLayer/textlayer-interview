@@ -13,5 +13,7 @@ thread_controller = ThreadController()
 @handle_exceptions
 def chat():
     validated_request_data = chat_messages_schema.load(request.get_json())
-    messages = thread_controller.process_chat_message(validated_request_data.get("messages"))
+    messages = thread_controller.process_chat_message(
+        validated_request_data.get("messages")
+    )
     return Response.make(messages, Response.HTTP_SUCCESS)

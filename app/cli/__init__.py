@@ -49,18 +49,19 @@ def init_opensearch():
 
     import os
 
-    indices = [{
-        #'index_name': os.environ.get('INDEX_NAME'),
-        #'template': generate_template_function()
-    }]
+    indices = [
+        {
+            #'index_name': os.environ.get('INDEX_NAME'),
+            #'template': generate_template_function()
+        }
+    ]
 
     session = opensearch_session()
 
     for index in indices:
-        if not session.indices.exists(index=index['index_name']):
-            create_index(session, index['template'])
+        if not session.indices.exists(index=index["index_name"]):
+            create_index(session, index["template"])
 
-    print('OpenSearch initialized')
+    print("OpenSearch initialized")
 
     return True
-

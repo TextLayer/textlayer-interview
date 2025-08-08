@@ -1,0 +1,3 @@
+user_query,sql_query,description
+tell me about Inez Santos,"(select * from customer where 'Inez Santos' in (Salesperson) limit 5) union all (select * from customer where 'Inez Santos' in (""Sales Manager"") limit 5)","Inez Santos appears to be the name of a person, print a summary of columns and rows limit 5 from tables that likely contain persons/names of people"
+what products are there,select distinct name from product,"The user is asking broad about products, the best response is to generate a SQL query listing distinct products in the products table, assume that product.name contains the name of the products"
