@@ -26,6 +26,7 @@ Flask==2.2.3
 Flask-Cors==5.0.0
 Flask-Mail==0.10.0
 flask-marshmallow==1.2.1
+flask-restx==1.3.0
 frozenlist==1.5.0
 fsspec==2025.3.0
 h11==0.14.0
