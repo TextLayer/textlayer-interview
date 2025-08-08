@@ -8,8 +8,10 @@ class Config:
     # LLM
     KNN_EMBEDDING_DIMENSION = int(os.environ.get('KNN_EMBEDDING_DIMENSION', 1536))
     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-    CHAT_MODEL = os.environ.get("CHAT_MODEL", "gpt-4o-mini")
-    EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small")
+    GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    CHAT_MODEL = os.environ.get("CHAT_MODEL", "gemini-2.5-flash")
+    EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "gemini-embedding-001")
 
     # Langfuse
     LANGFUSE_PUBLIC_KEY = os.environ.get('LANGFUSE_PUBLIC_KEY')

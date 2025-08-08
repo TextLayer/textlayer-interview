@@ -1,0 +1,126 @@
+# DATABASE SCHEMA
+Database: Financial business intelligence database with hierarchical account, customer, and product structures
+
+## Business Context
+- Account hierarchy (revenue, costs, margins)
+- Customer geographic regions
+- Product line categorization
+- Time-based financial tracking
+
+## Tables
+### ACCOUNT
+Purpose: Financial account hierarchy including revenue, costs, and calculated metrics
+Columns:
+- Key: VARCHAR (nullable) - Unique identifier/primary key
+- ParentId: VARCHAR (nullable) - Reference to parent in hierarchy
+- Name: VARCHAR (nullable) - Human-readable name/description
+- UNARY_OPERATOR: VARCHAR (nullable) - Mathematical operator for calculations
+- AccountType: VARCHAR (nullable) - Type classification for accounts
+- CalculationMethod: VARCHAR (nullable) - Method used for financial calculations
+- DebitCredit: VARCHAR (nullable) - Debit (0) or Credit (1) indicator
+- LineItemRequired: VARCHAR (nullable) - Data field in account
+- NonLeafInput: VARCHAR (nullable) - Data field in account
+- NumericFormat: VARCHAR (nullable) - Data field in account
+- PreventDataEntry: VARCHAR (nullable) - Data field in account
+- TCMethod: VARCHAR (nullable) - Data field in account
+- TCFormulaMDX: VARCHAR (nullable) - Data field in account
+- ProceduralCalc: VARCHAR (nullable) - Data field in account
+- CurrencyConversionMethod: VARCHAR (nullable) - Data field in account
+Sample data:
+  1. Key='40', ParentId='', Name='Gross Margin', UNARY_OPERATOR='~', AccountType='1', CalculationMethod='', DebitCredit='1', LineItemRequired='', NonLeafInput='', NumericFormat='#,###', PreventDataEntry='', TCMethod='0', TCFormulaMDX='', ProceduralCalc='', CurrencyConversionMethod=''
+  2. Key='400', ParentId='40', Name='Gross Revenue', UNARY_OPERATOR='+', AccountType='1', CalculationMethod='', DebitCredit='1', LineItemRequired='', NonLeafInput='', NumericFormat='#,###', PreventDataEntry='', TCMethod='0', TCFormulaMDX='', ProceduralCalc='', CurrencyConversionMethod=''
+
+### CUSTOMER
+Purpose: Customer and geographic region hierarchy
+Columns:
+- Key: VARCHAR (nullable) - Unique identifier/primary key
+- ParentId: VARCHAR (nullable) - Reference to parent in hierarchy
+- Name: VARCHAR (nullable) - Human-readable name/description
+- Channel: VARCHAR (nullable) - Sales or distribution channel
+- Channel Parent: VARCHAR (nullable) - Data field in customer
+- Customer Since: VARCHAR (nullable) - Data field in customer
+- Industry: VARCHAR (nullable) - Data field in customer
+- Location: VARCHAR (nullable) - Geographic location
+- Sales Manager: VARCHAR (nullable) - Data field in customer
+- Salesperson: VARCHAR (nullable) - Data field in customer
+Sample data:
+  1. Key='C0000', ParentId='', Name='Total Region', Channel='', Channel Parent='', Customer Since='', Industry='', Location='', Sales Manager='', Salesperson=''
+  2. Key='C1000', ParentId='C0000', Name='West', Channel='', Channel Parent='', Customer Since='', Industry='', Location='', Sales Manager='', Salesperson=''
+
+### OTHER
+Purpose: Additional financial metrics and calculated fields
+Columns:
+- Key: VARCHAR (nullable) - Unique identifier/primary key
+- ParentId: VARCHAR (nullable) - Reference to parent in hierarchy
+- Name: VARCHAR (nullable) - Human-readable name/description
+Sample data:
+  1. Key='NO', ParentId='', Name='No Other'
+  2. Key='TP', ParentId='', Name='Total Platform'
+
+### PRODUCT
+Purpose: Product categorization and line hierarchy
+Columns:
+- Key: VARCHAR (nullable) - Unique identifier/primary key
+- ParentId: VARCHAR (nullable) - Reference to parent in hierarchy
+- Name: VARCHAR (nullable) - Human-readable name/description
+- Product Line: VARCHAR (nullable) - Product categorization
+Sample data:
+  1. Key='P0000', ParentId='', Name='Total Products', Product Line=''
+  2. Key='P1000', ParentId='P0000', Name='Product Line A', Product Line=''
+
+### TIME
+Purpose: Time dimension for financial reporting
+Columns:
+- Name: VARCHAR (nullable) - Human-readable name/description
+- Month: VARCHAR (nullable) - Data field in time
+- StartPeriod: VARCHAR (nullable) - Data field in time
+- EndPeriod: VARCHAR (nullable) - Data field in time
+- Year: VARCHAR (nullable) - Data field in time
+- Quarter: VARCHAR (nullable) - Data field in time
+- FiscalQuarterNumber: VARCHAR (nullable) - Data field in time
+- FiscalMonthNumber: VARCHAR (nullable) - Data field in time
+- MonthAbbreviation: VARCHAR (nullable) - Data field in time
+- FiscalMonthAbbreviationWithYear: VARCHAR (nullable) - Data field in time
+- MonthWithYear: VARCHAR (nullable) - Data field in time
+Sample data:
+  1. Name='January', Month='2018M01', StartPeriod='2018-01-01', EndPeriod='2018-01-31', Year='2018', Quarter='2018Q1', FiscalQuarterNumber='1', FiscalMonthNumber='1', MonthAbbreviation='Jan', FiscalMonthAbbreviationWithYear='Jan2018', MonthWithYear='January2018'
+  2. Name='February', Month='2018M02', StartPeriod='2018-02-01', EndPeriod='2018-02-28', Year='2018', Quarter='2018Q1', FiscalQuarterNumber='1', FiscalMonthNumber='2', MonthAbbreviation='Feb', FiscalMonthAbbreviationWithYear='Feb2018', MonthWithYear='February2018'
+
+### TIME_PERSPECTIVE
+Purpose: Time-based analysis perspectives
+Columns:
+- Key: VARCHAR (nullable) - Unique identifier/primary key
+- ParentId: VARCHAR (nullable) - Reference to parent in hierarchy
+- Name: VARCHAR (nullable) - Human-readable name/description
+- CalculationMethod: VARCHAR (nullable) - Method used for financial calculations
+- MemberType: VARCHAR (nullable) - Data field in time_perspective
+Sample data:
+  1. Key='BASE', ParentId='', Name='Base', CalculationMethod='Input', MemberType='0'
+  2. Key='YTD', ParentId='', Name='Year', CalculationMethod='YTD', MemberType='1'
+
+### VERSION
+Purpose: Data versioning for financial scenarios
+Columns:
+- Key: VARCHAR (nullable) - Unique identifier/primary key
+- ParentId: VARCHAR (nullable) - Reference to parent in hierarchy
+- Name: VARCHAR (nullable) - Human-readable name/description
+- VersionType: VARCHAR (nullable) - Data field in version
+- Status: VARCHAR (nullable) - Data field in version
+- RuleSet: VARCHAR (nullable) - Data field in version
+- StartPeriod: VARCHAR (nullable) - Data field in version
+- EndPeriod: VARCHAR (nullable) - Data field in version
+- CarryForward: VARCHAR (nullable) - Data field in version
+- CalculationMethod: VARCHAR (nullable) - Method used for financial calculations
+- ReferenceVersion: VARCHAR (nullable) - Data field in version
+- TimeLevel: VARCHAR (nullable) - Data field in version
+Sample data:
+  1. Key='1', ParentId='', Name='Actual Versions', VersionType='0', Status='', RuleSet='', StartPeriod='', EndPeriod='', CarryForward='', CalculationMethod='', ReferenceVersion='', TimeLevel=''
+  2. Key='2', ParentId='', Name='Budget Versions', VersionType='0', Status='', RuleSet='', StartPeriod='', EndPeriod='', CarryForward='', CalculationMethod='', ReferenceVersion='', TimeLevel=''
+
+## Key Relationships
+- account: Self-referencing hierarchy in account
+- customer: Self-referencing hierarchy in customer
+- other: Self-referencing hierarchy in other
+- product: Self-referencing hierarchy in product
+- time_perspective: Self-referencing hierarchy in time_perspective
+- version: Self-referencing hierarchy in version

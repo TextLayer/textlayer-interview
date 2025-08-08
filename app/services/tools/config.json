@@ -1,0 +1,73 @@
+{
+  "tools": {
+    "execute_sql_tool": {
+      "name": "execute_sql_tool",
+      "description": "Execute SQL queries against the database and return results. Use this tool when the user asks questions about data that require database queries to answer.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "db_name": {
+            "type": "string",
+            "description": "Name of the database to query (usually 'main' for the primary database)",
+            "default": "main"
+          },
+          "sql": {
+            "type": "string",
+            "description": "The SQL query to execute. Must be a valid SELECT statement for data retrieval."
+          },
+          "explanation": {
+            "type": "string", 
+            "description": "Brief explanation of what this SQL query does and how it answers the user's question"
+          }
+        },
+        "required": ["sql", "explanation"]
+      },
+      "examples": [
+        {
+          "user_query": "Show me all customers from the Technology industry",
+          "tool_parameters": {
+            "db_name": "main",
+            "sql": "SELECT * FROM customer WHERE industry = 'Technology'",
+            "explanation": "Retrieves all customer records where the industry field equals 'Technology'"
+          }
+        },
+        {
+          "user_query": "What are the total sales by product?",
+          "tool_parameters": {
+            "db_name": "main", 
+            "sql": "SELECT product_name, SUM(sales_amount) as total_sales FROM sales GROUP BY product_name ORDER BY total_sales DESC",
+            "explanation": "Calculates total sales amount grouped by product name, ordered by highest sales first"
+          }
+        }
+      ],
+      "use_cases": [
+        "Data retrieval queries",
+        "Analytical questions about business data", 
+        "Questions requiring database lookups",
+        "Reporting and dashboard queries"
+      ],
+      "when_not_to_use": [
+        "General conversation or greetings",
+        "Questions not related to data",
+        "Requests for help or instructions",
+        "Questions that can be answered without data"
+      ]
+    }
+  },
+  "decision_guidelines": {
+    "respond_directly": [
+      "Greetings and general conversation",
+      "Help requests and how-to questions", 
+      "Questions about the system capabilities",
+      "Non-data related questions",
+      "Requests for explanations of concepts"
+    ],
+    "use_tool": [
+      "Questions asking for specific data from the database",
+      "Analytical questions requiring calculations",
+      "Requests for reports or data summaries",
+      "Questions about trends, patterns, or comparisons in data",
+      "Any question that starts with 'show me', 'what are the', 'how many', 'list all', etc."
+    ]
+  }
+}
