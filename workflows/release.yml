@@ -1,0 +1,54 @@
+name: Release Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g., 1.2.3)"
+        required: true
+
+jobs:
+  package_repo_to_s3:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      REPO_NAME: ${{ github.event.repository.name }}
+      S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      VERSION: ${{ github.event.inputs.version }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Create zip archive
+        run: |
+          ZIP_FILE="${REPO_NAME}-${VERSION}.zip"
+          git archive --format=zip --output "$ZIP_FILE" HEAD
+          echo "ZIP_FILE=$ZIP_FILE" >> $GITHUB_ENV
+
+      - name: Upload to S3
+        run: |
+          DEST="s3://${S3_BUCKET}/${REPO_NAME}/${ZIP_FILE}"
+          aws s3 cp "$ZIP_FILE" "$DEST" --only-show-errors
+          echo "Uploaded to $DEST"
+
+  release:
+    needs: [package_repo_to_s3]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Create GitHub release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: v${{ github.event.inputs.version }}
+          prerelease: false
