@@ -1,0 +1,23 @@
+name: PR Notification Workflow
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  notify-slack:
+    name: Notify Slack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{
+            \"text\": \":clipboard: *New Technical Interview Submission*\\n>*Repository:* \`$REPO_NAME\`\\n>*PR Title:* $PR_TITLE\\n>*Candidate:* $GITHUB_ACTOR\\n>*PR #:* <$PR_URL|#$PR_NUMBER>\\n>:mag: Technical review in progress...\"
+          }" $SLACK_WEBHOOK_URL
