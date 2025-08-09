@@ -3,13 +3,13 @@ import pandas as pd
 from typing import Optional, Dict, Any
 
 
-
 class DuckDBDatastore:
     """
     A datastore implementation for DuckDB.
     """
 
-    def __init__(self, database: Optional[str] = None) -> None:
+    # set read_only to True by default
+    def __init__(self, database: Optional[str] = None, read_only=True) -> None:
         """
         Initialize the DuckDBDataStore.
 
@@ -18,8 +18,8 @@ class DuckDBDatastore:
                                       If None, an in-memory database is used.
         """
         if database is None:
-            database = ':memory:'
-        self.connection = duckdb.connect(database=database)
+            database = ":memory:"
+        self.connection = duckdb.connect(database=database, read_only=read_only)
 
     def execute(
         self, query: str, parameters: Optional[Dict[str, Any]] = None
@@ -38,7 +38,6 @@ class DuckDBDatastore:
             return self.connection.execute(query, parameters).df()
         else:
             return self.connection.execute(query).df()
-        
 
     def get_columns(
         self, table_name: str, schema_name: Optional[str] = None

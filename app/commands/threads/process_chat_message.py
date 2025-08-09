@@ -1,3 +1,4 @@
+import os
 from typing import Dict, List
 from flask import current_app, g
 
@@ -7,7 +8,9 @@ from app.errors import ValidationException
 from app.services.llm.prompts.chat_prompt import chat_prompt
 from app.services.llm.session import LLMSession
 from app.services.llm.structured_outputs import text_to_sql
-from app.services.llm.tools.text_to_sql import text_to_sql as text_to_sql_tool
+from app.services.llm.tools.text_to_sql import (
+    text_to_sql_tool,
+)
 from app.utils.formatters import get_timestamp
 
 from langfuse.decorators import observe
@@ -22,12 +25,14 @@ class ProcessChatMessageCommand(ReadCommand):
     """
     Process a chat message.
     """
+
     def __init__(self, chat_messages: List[Dict[str, str]]) -> None:
         self.chat_messages = chat_messages
         self.llm_session = LLMSession(
             chat_model=current_app.config.get("CHAT_MODEL"),
             embedding_model=current_app.config.get("EMBEDDING_MODEL"),
         )
+
         self.toolkit = Toolkit()
         self.toolkit.add_tools(*[text_to_sql_tool])
 
@@ -37,15 +42,15 @@ class ProcessChatMessageCommand(ReadCommand):
         """
         if not self.chat_messages:
             raise ValidationException("Chat messages are required.")
-        
+
         return True
-    
+
     def execute(self) -> None:
         """
         Execute the command.
         """
         logger.debug(
-            f'Command {self.__class__.__name__} started with {len(self.chat_messages)} messages.'
+            f"Command {self.__class__.__name__} started with {len(self.chat_messages)} messages."
         )
 
         self.validate()
@@ -54,7 +59,6 @@ class ProcessChatMessageCommand(ReadCommand):
             "messages": self.prepare_chat_messages(),
             "tools": self.toolkit.tool_schemas(),
         }
-
         try:
             response = self.llm_session.chat(**chat_kwargs)
         except BadRequestError as e:
@@ -105,16 +109,13 @@ class ProcessChatMessageCommand(ReadCommand):
         self.chat_messages.extend(tool_messages)
 
         return self.chat_messages
-    
 
     @observe()
     def prepare_chat_messages(self) -> list:
         trimmed_messages = self.llm_session.trim_message_history(
             messages=self.chat_messages,
         )
-
         system_prompt = chat_prompt()
-
         trimmed_messages = system_prompt + trimmed_messages
 
         return trimmed_messages

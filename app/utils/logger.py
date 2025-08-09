@@ -13,7 +13,7 @@ def get_request_id():
     * Otherwise, generate a request ID and store it in flask.g.request_id
     :return:
     """
-    if getattr(flask.g, 'request_id', None):
+    if getattr(flask.g, "request_id", None):
         return flask.g.request_id
 
     if not flask.has_request_context():
@@ -35,6 +35,7 @@ class RequestIdFilter(logging.Filter):
     the logging format. Note that we're checking if we're in a request
     context, as we may want to log things before Flask is fully loaded.
     """
+
     def filter(self, record):
-        record.request_id = get_request_id() if flask.has_request_context() else ''
+        record.request_id = get_request_id() if flask.has_request_context() else ""
         return True

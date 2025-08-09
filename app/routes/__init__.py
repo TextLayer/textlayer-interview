@@ -13,7 +13,9 @@ def get_arg(args, arg_name, type=str, default=None):
         return default
 
 
-def get_pagination_args(args, default_page=1, default_per_page=10, max_per_page=1000) -> Tuple[int, int]:
+def get_pagination_args(
+    args, default_page=1, default_per_page=10, max_per_page=1000
+) -> Tuple[int, int]:
     """Get pagination arguments from request args
 
     Args:
@@ -33,7 +35,9 @@ def get_pagination_args(args, default_page=1, default_per_page=10, max_per_page=
         page = int(page)
         per_page = int(per_page)
     except ValueError as e:
-        raise ValidationException("Invalid pagination arguments - page and per_page must be integers")
+        raise ValidationException(
+            "Invalid pagination arguments - page and per_page must be integers"
+        )
 
     # Ensure per_page is within the allowed range
     per_page = min(per_page, max_per_page)

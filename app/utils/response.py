@@ -20,9 +20,9 @@ class Response:
 
     def build(self):
         response = {
-            'status': self.status,
-            'payload': self.data,
-            'correlation_id': get_request_id()
+            "status": self.status,
+            "payload": self.data,
+            "correlation_id": get_request_id(),
         }
         resp = make_response(response)
 
@@ -31,14 +31,18 @@ class Response:
     @staticmethod
     def make(data, status, deprecation_warning=False, deprecation_date=None):
         response = {
-            'status': status,
-            'payload': data,
-            'correlation_id': get_request_id()
+            "status": status,
+            "payload": data,
+            "correlation_id": get_request_id(),
         }
         if deprecation_warning:
-            deprecation_message = 'This endpoint is deprecated and will be removed in the future.'
+            deprecation_message = (
+                "This endpoint is deprecated and will be removed in the future."
+            )
             if deprecation_date:
-                deprecation_message += f' This endpoint will be removed on {deprecation_date}.'
-            response['deprecation_warning'] = deprecation_message
+                deprecation_message += (
+                    f" This endpoint will be removed on {deprecation_date}."
+                )
+            response["deprecation_warning"] = deprecation_message
         resp = make_response(response, status)
         return resp

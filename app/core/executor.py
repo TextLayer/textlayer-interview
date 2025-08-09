@@ -3,13 +3,13 @@ class Executor:
 
     @staticmethod
     def getInstance():
-        """ Static access method. """
+        """Static access method."""
         if not Executor.__instance:
             Executor()
         return Executor.__instance
 
     def __init__(self):
-        """ Virtually private constructor. """
+        """Virtually private constructor."""
         if Executor.__instance:
             raise Exception("This class is a singleton!")
         else:
